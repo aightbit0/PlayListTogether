@@ -7,6 +7,10 @@
   pointer-events: none;
 }
 
+.oka{
+  max-height: 400px;
+}
+
 .login{
   width: 90%;
   margin-left: auto;

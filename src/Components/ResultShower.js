@@ -81,7 +81,7 @@ export const ResultShower = (props) => {
     let stuff = [];
     objekt.map((i)=>{
       stuff.push(
-      <EuiFlexGroup responsive={false} onClick = {() =>addToBucket(i.preview_url)} alignItems="center">
+      <EuiFlexGroup responsive={true} onClick = {() =>addToBucket(i.preview_url)} alignItems="center">
       <EuiFlexItem grow={false} >
       <EuiImage
       size="s"
@@ -90,13 +90,7 @@ export const ResultShower = (props) => {
       alt="Accessible image alt goes here"
       src={i.album.images[0].url}
     />
-    <div>
-        <audio controls>
-        <source src={i.preview_url} type="audio/ogg"/>
-        <source src={i.preview_url} type="audio/mpeg"/>
-      Your browser does not support the audio element.
-      </audio>
-    </div>
+    
       </EuiFlexItem>
       <EuiFlexItem grow={false}>
       <EuiHealth textSize="m" color="success">
@@ -106,10 +100,18 @@ export const ResultShower = (props) => {
       {i.album.artists[0].name}
     </EuiHealth>
       </EuiFlexItem>
+      <div>
+        <audio controls>
+        <source src={i.preview_url} type="audio/ogg"/>
+        <source src={i.preview_url} type="audio/mpeg"/>
+      Your browser does not support the audio element.
+      </audio>
+    </div>
+    <EuiSpacer/>
     </EuiFlexGroup>)
     })
 
-    let allTogether = <div className="eui-yScroll">
+    let allTogether = <div className="eui-yScroll oka">
 
 
       {stuff}
