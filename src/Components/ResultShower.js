@@ -25,7 +25,7 @@ export const ResultShower = (props) => {
 
   let getData = (stuff) =>{
     setisload(true);
-    fetch("http://localhost:8080/search?v="+stuff)
+    fetch("http://192.168.0.52:8080/search?v="+stuff)
     .then(res => res.json())
     .then(
       (result) => {
@@ -52,7 +52,8 @@ export const ResultShower = (props) => {
 
   let addToBucket = (obj) =>{
     console.log(obj)
-    alert("Noch nicht hier");
+    //alert("Noch nicht hier");
+   
    /*
     fetch(" https://www.youtube.com/oembed?url="+stuff)
     .then(res => res.json())
@@ -80,7 +81,7 @@ export const ResultShower = (props) => {
     let stuff = [];
     objekt.map((i)=>{
       stuff.push(
-      <EuiFlexGroup responsive={false} onClick = {() =>addToBucket(i.name)} alignItems="center">
+      <EuiFlexGroup responsive={false} onClick = {() =>addToBucket(i.preview_url)} alignItems="center">
       <EuiFlexItem grow={false} >
       <EuiImage
       size="s"
@@ -89,6 +90,13 @@ export const ResultShower = (props) => {
       alt="Accessible image alt goes here"
       src={i.album.images[0].url}
     />
+    <div>
+        <audio controls>
+        <source src={i.preview_url} type="audio/ogg"/>
+        <source src={i.preview_url} type="audio/mpeg"/>
+      Your browser does not support the audio element.
+      </audio>
+    </div>
       </EuiFlexItem>
       <EuiFlexItem grow={false}>
       <EuiHealth textSize="m" color="success">
