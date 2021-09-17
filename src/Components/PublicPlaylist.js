@@ -30,7 +30,7 @@ Example country object:
 
 
 
-export const PublicPlaylist = () => {
+export const PublicPlaylist = (props) => {
 
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)

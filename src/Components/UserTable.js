@@ -30,7 +30,7 @@ Example country object:
 
 
 
-export const UserTable = () => {
+export const UserTable = (props) => {
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)
 
@@ -109,6 +109,8 @@ export const UserTable = () => {
 
   return (
     <div>
+      <h3>Hi {props.user}</h3>
+      <br/>
     <h2>Bucket (2 of 15)</h2><br/>
     <EuiBasicTable
       items={items}

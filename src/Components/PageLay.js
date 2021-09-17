@@ -9,8 +9,9 @@ import {
   EuiPageHeader,
   EuiPageBody,
   EuiPageContentBody,
+  EuiButton,
 } from '@elastic/eui';
-import { render } from '@testing-library/react';
+
 import { PublicPlaylist } from './PublicPlaylist';
 
 export const PageLay = (props) => {
@@ -19,20 +20,14 @@ export const PageLay = (props) => {
   const [content, setContent] = useState(<div><Search/>
     <UserTable/></div>)
 
-useEffect(() =>{
-  if(bucketSelected){
-      console.log("mounted")
-  }
-},[])
-
   useEffect(() => {
    console.log(bucketSelected)
     if(bucketSelected){
-      setContent(<div><Search/>
-        <UserTable/></div>)
+      setContent(<div><Search user={props.user}/>
+        <UserTable user={props.user}/></div>)
     }
     if(playListSelected){
-      setContent(<div><PublicPlaylist/></div>)
+      setContent(<div><PublicPlaylist user={props.user}/></div>)
     }
   },[bucketSelected,playListSelected]);
 
@@ -53,7 +48,9 @@ useEffect(() =>{
           restrictWidth
           paddingSize="l"
           pageTitle="PlayListTogether"
-          tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} }]}
+          tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
+          { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
+          { label: 'Theme',  onClick: () => props.toggleTheme()}]}
         />
         <EuiPageContent borderRadius="none" hasShadow={false} paddingSize="none">
           <EuiPageContentBody restrictWidth paddingSize="l">
