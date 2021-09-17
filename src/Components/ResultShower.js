@@ -9,6 +9,7 @@ import {
   EuiFlexItem,
   EuiFlexGroup,
   EuiImage,
+  EuiHealth,
 
 } from '@elastic/eui';
 
@@ -24,7 +25,7 @@ export const ResultShower = (props) => {
 
   let getData = (stuff) =>{
     setisload(true);
-    fetch(" https://www.youtube.com/oembed?url="+stuff)
+    fetch("http://localhost:8080/search?v="+stuff)
     .then(res => res.json())
     .then(
       (result) => {
@@ -75,26 +76,39 @@ export const ResultShower = (props) => {
 
   let renderThisShit = (res) =>{
     let objekt = JSON.parse(res);
-    let stuff =  <div className="eui-yScroll">
-
-
-<EuiFlexGroup responsive={false} onClick = {() =>addToBucket(objekt)} alignItems="center">
+    console.log(objekt.length)
+    let stuff = [];
+    objekt.map((i)=>{
+      stuff.push(
+      <EuiFlexGroup responsive={false} onClick = {() =>addToBucket(i.name)} alignItems="center">
       <EuiFlexItem grow={false} >
       <EuiImage
       size="s"
       hasShadow
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
-      src={objekt.thumbnail_url}
+      src={i.album.images[0].url}
     />
       </EuiFlexItem>
       <EuiFlexItem grow={false}>
-        <h2>{objekt.title}</h2>
+      <EuiHealth textSize="m" color="success">
+        {i.name}
+      </EuiHealth>
+      <EuiHealth textSize="s" color="success">
+      {i.album.artists[0].name}
+    </EuiHealth>
       </EuiFlexItem>
-    </EuiFlexGroup>
+    </EuiFlexGroup>)
+    })
+
+    let allTogether = <div className="eui-yScroll">
+
+
+      {stuff}
     
-  </div>;
-    setVal(stuff);
+    </div>
+    
+    setVal(allTogether);
   }
 
   useEffect(() => {
