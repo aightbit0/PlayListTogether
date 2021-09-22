@@ -25,7 +25,7 @@ export const ResultShower = (props) => {
 
   let getData = (stuff) =>{
     setisload(true);
-    fetch("http://192.168.0.52:8080/search?v="+stuff)
+    fetch("http://localhost:8080/search?v="+stuff)
     .then(res => res.json())
     .then(
       (result) => {
@@ -51,31 +51,47 @@ export const ResultShower = (props) => {
   }
 
   let addToBucket = (obj) =>{
-    console.log(obj.uri)
-    console.log(obj.name)
-    console.log(obj.album.artists[0].name)
-    console.log(props.user)
-    //alert("Noch nicht hier");
+    console.log(obj.external_urls.spotify)
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: props.user, 
+        token: localStorage.getItem("token"), 
+        uri: obj.uri, 
+        songname: obj.name, 
+        artist: obj.album.artists[0].name, 
+        picture:obj.album.images[0].url,
+        url: obj.external_urls.spotify,
+       })
+  };
+
+  fetch('http://localhost:8080/AddSongToBucket', requestOptions)
+      .then(response => response.json())
+      .then(
+        (result) => {
+          if(result != "acess denied"){
+            console.log(result);
+            props.setBack(result);
+          }else{
+            localStorage.setItem("token", '');
+            localStorage.setItem("user", '');
+            window.location.reload();
+          }
+        },
+        (error) => {
+         console.log("fail")
+          console.log(error);
+          setErr(<EuiToast
+            title="No Connection"
+            color="danger"
+            iconType="alert"
+            onClick = {() =>setErr(<div></div>)}
+          >
+            <p>No Connection</p>
+          </EuiToast>)
+        }
+      )
    
-   /*
-    fetch(" https://www.youtube.com/oembed?url="+stuff)
-    .then(res => res.json())
-    .then(
-      (result) => {
-       
-      },
-      (error) => {
-       setErr( <EuiToast
-        title="Couldn't complete the search"
-        color="danger"
-        iconType="alert"
-        onClick = {() =>setErr(<div></div>)}
-      >
-        <p>Fail adding to bucket</p>
-      </EuiToast>)
-      }
-    )
-    */
   }
 
   let renderThisShit = (res) =>{

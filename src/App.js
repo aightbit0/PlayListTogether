@@ -13,6 +13,10 @@ import {
 
 function App() {
   useEffect(() =>{
+    if(localStorage.getItem('token') != '' && localStorage.getItem('user') != ''){
+      //fetch zur überprüfung
+      setCont(<PageLay toggleTheme={() => themeChanger()} user={localStorage.getItem('user')}/>);
+    }
     if(localStorage.getItem('theme') == "light"){
       import('@elastic/eui/dist/eui_theme_light.css');
     }
@@ -37,12 +41,14 @@ function App() {
       body: JSON.stringify({ name: theuser, password: passwd, token: "hjsgdhjsdf56sd7f57dsfgjsdgfsdzf67sd65f7sdgjehsdofd7f9s" })
   };
 
-  fetch('http://192.168.0.52:8080/login', requestOptions)
+  fetch('http://localhost:8080/login', requestOptions)
       .then(response => response.json())
       .then(
         (result) => {
           console.log(result)
           if(result != "acess denied"){
+            localStorage.setItem('token', result);
+            localStorage.setItem('user', theuser);
             setCont(<PageLay toggleTheme={() => themeChanger()} user={theuser}/>);
           }else{
             setErr(<EuiToast

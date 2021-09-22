@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import {
   EuiBasicTable,
   EuiLink,
@@ -11,28 +11,27 @@ export const UserTable = (props) => {
   const [toggler,setToggler] = useState(true)
   const [items, setItems] = useState([])
 
-  /*
-  const items = [{
-    id: '1',
-    Picture: 'https://i.ytimg.com/vi/4ZHwu0uut3k/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDaYizE-kiElhtI_i6ZWw-EZWWtCQ',
-    Title: 'Some Sample Song',
-    User: 'Sven',
-    Dislikes:"1",
-    Artist:"pimml"
-  },
-  {
-    id: '2',
-    Picture: 'https://i.ytimg.com/vi/vg1hRBVgMmk/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDY9hxotLxrHixM3kQwUkOZCmiQCg',
-    Title: 'Gimme Luv',
-    User: 'Sven',
-    Dislikes:"0",
-    Artist:"pimml"
-  }];
-  */
+  useEffect(() =>{
+   console.log("Im Endpoint angekommen")
+   console.log(props.newItems);
+   if(items.length < 15){
+    if(props.newItems.length != 0){
+      setItems(items => [...items, props.newItems]);
+     }
+   }else{
+     console.log("Maximum erreicht")
+   }
+   
+  },[props.newItems])
+
+  let DeleteItem = (id) =>{
+    console.log("ist angekommen DELETE")
+    console.log(id)
+  }
 
   const columns = [
     {
-      field: 'Picture',
+      field: 'picture',
       name: 'Picture',
       'data-test-subj': 'firstNameCell',
       render: (name) => (
@@ -47,21 +46,21 @@ export const UserTable = (props) => {
       ),
     },
     {
-      field: 'Title',
+      field: 'songname',
       name: 'Title',
       truncateText: true,
-      render: (name) => (
-        <EuiLink href="#" target="_blank">
+      render: (name, item) => (
+        <EuiLink href={item.url} target="_blank">
           {name}
         </EuiLink>
       ),
     },
     {
-      field: 'Artist',
+      field: 'artist',
       name: 'Artist',
     },
     {
-      field: 'User',
+      field: 'name',
       name: 'User',
     },
   ];
@@ -72,14 +71,6 @@ export const UserTable = (props) => {
     return {
       'data-test-subj': `row-${id}`,
       className: 'customRowClass',
-      onClick: () => {
-        if(toggler){
-          setToggler(false)
-      }else{
-        setToggler(true)
-      }
-        setModalrenderer(<Delete toggle={toggler} show={item.id}/>)
-      },
     };
   };
 
@@ -88,6 +79,16 @@ export const UserTable = (props) => {
     const { field } = column;
     return {
       className: 'customCellClass',
+      onClick: () => {
+        if(field != "songname"){
+          if(toggler){
+            setToggler(false)
+        }else{
+          setToggler(true)
+        }
+          setModalrenderer(<Delete del={(id) => DeleteItem(id)} toggle={toggler} show={item.songname}/>)
+        }
+      },
       'data-test-subj': `cell-${id}-${field}`,
       textOnly: true,
     };

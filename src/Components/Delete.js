@@ -24,9 +24,9 @@ export const Delete= (props) => {
   if (isModalVisible) {
     modal = (
       <EuiConfirmModal
-        title="Delete Song from Bucket"
+        title={props.show}
         onCancel={closeModal}
-        onConfirm={closeModal}
+        onConfirm={() => props.del(props.show)}
         cancelButtonText="No, don't do it"
         confirmButtonText="Yes, do it"
         defaultFocusedButton="confirm"

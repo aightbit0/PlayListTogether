@@ -13,6 +13,12 @@ export const Search = (props) => {
     let requestHandler = (e) =>{
         setSearchValue(e.target.value)
     }
+
+    let addedtoBucket = (item) =>{
+      console.log(item)
+      setSearchValue('')
+      props.reload(item)
+    }
     
     return (
         <Fragment>
@@ -27,7 +33,7 @@ export const Search = (props) => {
             />
           </EuiFlexItem>
         </EuiFlexGroup>
-        <ResultShower user={props.user} search={searchValue}/>
+        <ResultShower user={props.user} search={searchValue} setBack={(item) => addedtoBucket(item)}/>
       </Fragment>
       );
  
