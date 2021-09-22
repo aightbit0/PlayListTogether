@@ -6,34 +6,11 @@ import {
 } from '@elastic/eui';
 import { Dislike } from './Dislike';
 
-/*
-Example user object:
-
-{
-  id: '1',
-  firstName: 'john',
-  lastName: 'doe',
-  github: 'johndoe',
-  dateOfBirth: Date.now(),
-  nationality: 'NL',
-  online: true
-}
-
-Example country object:
-
-{
-  code: 'NL',
-  name: 'Netherlands',
-  flag: '🇳🇱'
-}
-*/
-
-
-
 export const PublicPlaylist = (props) => {
 
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)
+  const [items, setItems] = useState([])
 
   const columns = [
     {
@@ -62,6 +39,10 @@ export const PublicPlaylist = (props) => {
       ),
     },
     {
+      field: 'Artist',
+      name: 'Artist',
+    },
+    {
       field: 'User',
       name: 'User',
     },
@@ -72,12 +53,14 @@ export const PublicPlaylist = (props) => {
     },
   ];
   
+  /*
   const items = [{
     id: '1',
     Picture: 'https://i.ytimg.com/vi/4ZHwu0uut3k/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDaYizE-kiElhtI_i6ZWw-EZWWtCQ',
     Title: 'Some Sample Song',
     User: 'Sven',
     Dislikes:"1",
+    Artist:"pimml"
   },
   {
     id: '2',
@@ -85,6 +68,7 @@ export const PublicPlaylist = (props) => {
     Title: 'Gimme Luv',
     User: 'Sven',
     Dislikes:"0",
+    Artist:"pimml"
   },
   {
     id: '3',
@@ -92,7 +76,9 @@ export const PublicPlaylist = (props) => {
     Title: 'Gimme Luv',
     User: 'Dimitratos',
     Dislikes:"0",
+    Artist:"pimml"
   }];
+  */
 
   const getRowProps = (item) => {
     const { id } = item;
@@ -122,7 +108,7 @@ export const PublicPlaylist = (props) => {
 
   return (
     <div>
-    <h2>Die Playlist</h2><br/>
+    <h2>Die Playlist ({items.length})</h2><br/>
     <EuiBasicTable
       items={items}
       rowHeader="firstName"

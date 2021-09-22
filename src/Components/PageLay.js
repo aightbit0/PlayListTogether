@@ -50,7 +50,8 @@ export const PageLay = (props) => {
           pageTitle="PlayListTogether"
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
-          { label: 'Theme',  onClick: () => props.toggleTheme()}]}
+          { label: 'Theme',  onClick: () => props.toggleTheme()},
+          {label: "Log out",onClick: () => window.location.reload()}]}
         />
         <EuiPageContent borderRadius="none" hasShadow={false} paddingSize="none">
           <EuiPageContentBody restrictWidth paddingSize="l">

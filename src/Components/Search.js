@@ -8,10 +8,8 @@ import {
   EuiButton,
 } from '@elastic/eui';
 
-export const Search = () => {
+export const Search = (props) => {
     let [searchValue, setSearchValue] = useState('');
-    //let [sendToResultShower, setSendToResultShower] = useState('closed');
-
     let requestHandler = (e) =>{
         setSearchValue(e.target.value)
     }
@@ -28,9 +26,8 @@ export const Search = () => {
               onChange={(e) => requestHandler(e)}
             />
           </EuiFlexItem>
-          
         </EuiFlexGroup>
-        <ResultShower search={searchValue}/>
+        <ResultShower user={props.user} search={searchValue}/>
       </Fragment>
       );
  

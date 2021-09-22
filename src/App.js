@@ -31,20 +31,43 @@ function App() {
   const [err, setErr] = useState(<div></div>);
 
   let isAuth = (theuser, passwd) =>{
-    console.log(theuser)
-    console.log(passwd)
-    if(theuser && theuser != ""){
-      setCont(<PageLay toggleTheme={() => themeChanger()} user={theuser}/>);
-    }else{
-      setErr(<EuiToast
-        title="Not Authorised"
-        color="danger"
-        iconType="alert"
-        onClick = {() =>setErr(<div></div>)}
-      >
-        <p>Not Authorised Access (Du kommst hier net rein)</p>
-      </EuiToast>)
-    }
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: theuser, password: passwd, token: "hjsgdhjsdf56sd7f57dsfgjsdgfsdzf67sd65f7sdgjehsdofd7f9s" })
+  };
+
+  fetch('http://192.168.0.52:8080/login', requestOptions)
+      .then(response => response.json())
+      .then(
+        (result) => {
+          console.log(result)
+          if(result != "acess denied"){
+            setCont(<PageLay toggleTheme={() => themeChanger()} user={theuser}/>);
+          }else{
+            setErr(<EuiToast
+              title="Not Authorised"
+              color="danger"
+              iconType="alert"
+              onClick = {() =>setErr(<div></div>)}
+            >
+              <p>Not Authorised Access (Du kommst hier net rein)</p>
+            </EuiToast>)
+          }
+        },
+        (error) => {
+         console.log("fail")
+          console.log(error);
+          setErr(<EuiToast
+            title="No Connection"
+            color="danger"
+            iconType="alert"
+            onClick = {() =>setErr(<div></div>)}
+          >
+            <p>No Connection</p>
+          </EuiToast>)
+        }
+      )
   }
   
   return (

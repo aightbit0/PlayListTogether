@@ -51,7 +51,10 @@ export const ResultShower = (props) => {
   }
 
   let addToBucket = (obj) =>{
-    console.log(obj)
+    console.log(obj.uri)
+    console.log(obj.name)
+    console.log(obj.album.artists[0].name)
+    console.log(props.user)
     //alert("Noch nicht hier");
    
    /*
@@ -81,7 +84,7 @@ export const ResultShower = (props) => {
     let stuff = [];
     objekt.map((i)=>{
       stuff.push(
-      <EuiFlexGroup responsive={true} onClick = {() =>addToBucket(i.preview_url)} alignItems="center">
+      <EuiFlexGroup responsive={true} onClick = {() =>addToBucket(i)} alignItems="center">
       <EuiFlexItem grow={false} >
       <EuiImage
       size="s"

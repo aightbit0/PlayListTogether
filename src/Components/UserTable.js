@@ -9,6 +9,26 @@ import { Delete } from './Delete';
 export const UserTable = (props) => {
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)
+  const [items, setItems] = useState([])
+
+  /*
+  const items = [{
+    id: '1',
+    Picture: 'https://i.ytimg.com/vi/4ZHwu0uut3k/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDaYizE-kiElhtI_i6ZWw-EZWWtCQ',
+    Title: 'Some Sample Song',
+    User: 'Sven',
+    Dislikes:"1",
+    Artist:"pimml"
+  },
+  {
+    id: '2',
+    Picture: 'https://i.ytimg.com/vi/vg1hRBVgMmk/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDY9hxotLxrHixM3kQwUkOZCmiQCg',
+    Title: 'Gimme Luv',
+    User: 'Sven',
+    Dislikes:"0",
+    Artist:"pimml"
+  }];
+  */
 
   const columns = [
     {
@@ -37,25 +57,15 @@ export const UserTable = (props) => {
       ),
     },
     {
+      field: 'Artist',
+      name: 'Artist',
+    },
+    {
       field: 'User',
       name: 'User',
     },
   ];
   
-  const items = [{
-    id: '1',
-    Picture: 'https://i.ytimg.com/vi/4ZHwu0uut3k/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDaYizE-kiElhtI_i6ZWw-EZWWtCQ',
-    Title: 'Some Sample Song',
-    User: 'Sven',
-    Dislikes:"1",
-  },
-  {
-    id: '2',
-    Picture: 'https://i.ytimg.com/vi/vg1hRBVgMmk/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDY9hxotLxrHixM3kQwUkOZCmiQCg',
-    Title: 'Gimme Luv',
-    User: 'Sven',
-    Dislikes:"0",
-  }];
 
   const getRowProps = (item) => {
     const { id } = item;
