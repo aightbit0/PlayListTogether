@@ -10,7 +10,13 @@ export const PublicPlaylist = (props) => {
 
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)
-  const [items, setItems] = useState([])
+  //const [items, setItems] = useState([])
+
+  let DislikeItem = (id) =>{
+    //fetch
+    console.log("ist angekommen DISLIKE")
+    console.log(id)
+  }
 
   const columns = [
     {
@@ -53,7 +59,7 @@ export const PublicPlaylist = (props) => {
     },
   ];
   
-  /*
+  
   const items = [{
     id: '1',
     Picture: 'https://i.ytimg.com/vi/4ZHwu0uut3k/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDaYizE-kiElhtI_i6ZWw-EZWWtCQ',
@@ -78,7 +84,7 @@ export const PublicPlaylist = (props) => {
     Dislikes:"0",
     Artist:"pimml"
   }];
-  */
+  
 
   const getRowProps = (item) => {
     const { id } = item;
@@ -91,7 +97,7 @@ export const PublicPlaylist = (props) => {
           }else{
             setToggler(true)
           }
-          setModalrenderer(<Dislike toggle={toggler} show={item.id}/>)
+          setModalrenderer(<Dislike dis={(id) => DislikeItem(id)} toggle={toggler} show={item.id}/>)
       },
     };
   };

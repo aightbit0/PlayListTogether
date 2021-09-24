@@ -26,7 +26,7 @@ export const Dislike= (props) => {
       <EuiConfirmModal
         title="Dislike Song"
         onCancel={closeModal}
-        onConfirm={closeModal}
+        onConfirm={() => props.dis(props.show)}
         cancelButtonText="No, don't do it"
         confirmButtonText="Yes, do it"
         defaultFocusedButton="confirm"

@@ -27,6 +27,7 @@ export const UserTable = (props) => {
   },[props.newItems])
 
   let DeleteItem = (id) =>{
+    //fetch
     console.log("ist angekommen DELETE")
     console.log(id)
   }
