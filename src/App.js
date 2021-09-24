@@ -13,12 +13,12 @@ import {
 
 function App() {
   useEffect(() =>{
+    if(localStorage.getItem('theme') == "light"){
+      import('@elastic/eui/dist/eui_theme_light.css');
+    }
     if(localStorage.getItem('token') != '' && localStorage.getItem('user') != ''){
       //fetch zur überprüfung
       setCont(<PageLay toggleTheme={() => themeChanger()} user={localStorage.getItem('user')}/>);
-    }
-    if(localStorage.getItem('theme') == "light"){
-      import('@elastic/eui/dist/eui_theme_light.css');
     }
   },[])
 

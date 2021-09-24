@@ -110,7 +110,7 @@ export const UserTable = (props) => {
     />
     {modalrender}
     <EuiSpacer/>
-    <EuiButton color="primary">Merge</EuiButton>
+    <EuiButton isDisabled={true} color="primary">Merge</EuiButton>
     </div>
   );
 };
