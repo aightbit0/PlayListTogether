@@ -3,6 +3,8 @@ import {
   EuiBasicTable,
   EuiLink,
   EuiImage,
+  EuiButton,
+  EuiSpacer,
 } from '@elastic/eui';
 import { Delete } from './Delete';
 
@@ -107,6 +109,8 @@ export const UserTable = (props) => {
       cellProps={getCellProps}
     />
     {modalrender}
+    <EuiSpacer/>
+    <EuiButton color="primary">Merge</EuiButton>
     </div>
   );
 };
