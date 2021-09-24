@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   EuiBasicTable,
   EuiLink,
@@ -10,22 +10,74 @@ export const PublicPlaylist = (props) => {
 
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)
-  //const [items, setItems] = useState([])
+  const [items, setItems] = useState([])
+
+  useEffect(() =>{
+    if(props.user){
+      loadPlaylist();
+    }
+  },[props.user])
+
+  let loadPlaylist = async () =>{
+    console.log(localStorage.getItem("token"));
+    console.log(props.user);
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: props.user,
+       })
+  };
+    fetch("http://192.168.0.73:8080/getplaylist",requestOptions)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        setItems(result);
+      },
+      (error) => {
+       console.log("failed fetching amount")
+      }
+    )
+
+    return
+  }
 
   let DislikeItem = (id) =>{
     //fetch
     console.log("ist angekommen DISLIKE")
     console.log(id)
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: props.user,
+        id: parseInt(id)
+       })
+  };
+    fetch("http://localhost:8080/dislike",requestOptions)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+      },
+      (error) => {
+       console.log("failed fetching delete")
+      }
+    )
   }
 
   const columns = [
     {
-      field: 'Picture',
+      field: 'picture',
       name: 'Picture',
       'data-test-subj': 'firstNameCell',
       render: (name) => (
         <EuiImage
-      size="s"
+      size="60px"
       hasShadow
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
@@ -35,7 +87,7 @@ export const PublicPlaylist = (props) => {
       ),
     },
     {
-      field: 'Title',
+      field: 'songname',
       name: 'Title',
       truncateText: true,
       render: (name) => (
@@ -45,46 +97,19 @@ export const PublicPlaylist = (props) => {
       ),
     },
     {
-      field: 'Artist',
+      field: 'artist',
       name: 'Artist',
     },
     {
-      field: 'User',
+      field: 'name',
       name: 'User',
     },
     {
-      field: 'Dislikes',
+      field: 'dislikes',
       name: 'Dislikes',
 
     },
   ];
-  
-  
-  const items = [{
-    id: '1',
-    Picture: 'https://i.ytimg.com/vi/4ZHwu0uut3k/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDaYizE-kiElhtI_i6ZWw-EZWWtCQ',
-    Title: 'Some Sample Song',
-    User: 'Sven',
-    Dislikes:"1",
-    Artist:"pimml"
-  },
-  {
-    id: '2',
-    Picture: 'https://i.ytimg.com/vi/vg1hRBVgMmk/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDY9hxotLxrHixM3kQwUkOZCmiQCg',
-    Title: 'Gimme Luv',
-    User: 'Sven',
-    Dislikes:"0",
-    Artist:"pimml"
-  },
-  {
-    id: '3',
-    Picture: 'https://i.ytimg.com/vi/vg1hRBVgMmk/hqdefault.jpg?sqp=-oaymwEbCKgBEF5IVfKriqkDDggBFQAAiEIYAXABwAEG&rs=AOn4CLDY9hxotLxrHixM3kQwUkOZCmiQCg',
-    Title: 'Gimme Luv',
-    User: 'Dimitratos',
-    Dislikes:"0",
-    Artist:"pimml"
-  }];
-  
 
   const getRowProps = (item) => {
     const { id } = item;
@@ -115,6 +140,7 @@ export const PublicPlaylist = (props) => {
   return (
     <div>
     <h2>Die Playlist ({items.length})</h2><br/>
+    <div className={"eui-yScroll play"}>
     <EuiBasicTable
       items={items}
       rowHeader="firstName"
@@ -122,6 +148,7 @@ export const PublicPlaylist = (props) => {
       rowProps={getRowProps}
       cellProps={getCellProps}
     />
+    </div>
     {modalrender}
     
     </div>

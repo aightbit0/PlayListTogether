@@ -46,7 +46,7 @@ function App() {
       body: JSON.stringify({ name: theuser, password: passwd, token: "hjsgdhjsdf56sd7f57dsfgjsdgfsdzf67sd65f7sdgjehsdofd7f9s" })
   };
 
-  fetch('http://localhost:8080/login', requestOptions)
+  fetch('http://192.168.0.73:8080/login', requestOptions)
       .then(response => response.json())
       .then(
         (result) => {

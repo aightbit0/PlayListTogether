@@ -1,40 +1,38 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
 
 .oka{
   max-height: 400px;
 }
 
+.bucket{
+  max-height: 400px;
+}
+
+.play{
+  max-height: 450px;
+}
+
+.img{
+  margin-right: 2%;
+}
 .login{
   width: 90%;
   margin-left: auto;
   margin-right: auto;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.ulstyle{
+  margin-left: 2%;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+
+
+.audio{
+  width: 100%;
+  margin-top: 5px;
+  margin-bottom: 10px;
 }
 
-.App-link {
-  color: #61dafb;
-}
+
+
+
 

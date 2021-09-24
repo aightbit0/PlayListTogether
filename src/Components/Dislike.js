@@ -24,7 +24,7 @@ export const Dislike= (props) => {
   if (isModalVisible) {
     modal = (
       <EuiConfirmModal
-        title="Dislike Song"
+        title={props.show}
         onCancel={closeModal}
         onConfirm={() => props.dis(props.show)}
         cancelButtonText="No, don't do it"

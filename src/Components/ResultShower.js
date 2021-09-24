@@ -25,7 +25,7 @@ export const ResultShower = (props) => {
 
   let getData = (stuff) =>{
     setisload(true);
-    fetch("http://localhost:8080/search?v="+stuff)
+    fetch("http://192.168.0.73:8080/search?v="+stuff)
     .then(res => res.json())
     .then(
       (result) => {
@@ -51,7 +51,7 @@ export const ResultShower = (props) => {
   }
 
   let addToBucket = (obj) =>{
-    console.log(obj.external_urls.spotify)
+    console.log(obj)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -65,7 +65,7 @@ export const ResultShower = (props) => {
        })
   };
 
-  fetch('http://localhost:8080/AddSongToBucket', requestOptions)
+  fetch('http://localhost:8080/addsongtobucket', requestOptions)
       .then(response => response.json())
       .then(
         (result) => {
@@ -101,9 +101,9 @@ export const ResultShower = (props) => {
     objekt.map((i)=>{
       stuff.push(
       <EuiFlexGroup responsive={true} onClick = {() =>addToBucket(i)} alignItems="center">
-      <EuiFlexItem grow={false} >
+      <EuiFlexItem  grow={false} >
       <EuiImage
-      size="s"
+      size="60px"
       hasShadow
       allowFullScreen = {false}
       alt="Accessible image alt goes here"

@@ -15,7 +15,7 @@ export const Delete= (props) => {
   const closeModal = () => setIsModalVisible(false);
   
   useEffect(() =>{
-    console.log("im dislike");
+    console.log("im delete");
     setIsModalVisible(true);
   },[props.toggle])
 

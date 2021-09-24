@@ -5,6 +5,7 @@ import {
   EuiImage,
   EuiButton,
   EuiSpacer,
+  EuiToast,
 } from '@elastic/eui';
 import { Delete } from './Delete';
 
@@ -12,24 +13,155 @@ export const UserTable = (props) => {
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)
   const [items, setItems] = useState([])
+  const [bds, setBds] = useState(true);
+  const [err, setErr] = useState(<div></div>);
+  const [amount, setAmount] = useState(1);
+  const [loaded, setLoaded] = useState(false);
+
+  useEffect(() =>{
+    if(props.user){
+      getamount();
+      loadBucket();
+    }
+  },[props.user])
+
+  useEffect(() =>{
+    if(items.length == amount){
+      setBds(false)
+    }  
+  },[amount,items])
+
+  
+  let loadBucket = async () =>{
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: props.user,
+       })
+  };
+  
+    fetch("http://192.168.0.73:8080/getbucket",requestOptions)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        setItems(result);
+        setLoaded(true)
+      },
+      (error) => {
+       console.log("failed fetching bucket")
+      }
+    )
+   
+    return
+  }
+
+  let getamount = async () =>{
+    fetch("http://192.168.0.73:8080/getamount")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        
+        setAmount(parseInt(result));
+        console.log(result);
+        
+      },
+      (error) => {
+       console.log("failed fetching amount")
+      }
+    )
+    return
+  }
 
   useEffect(() =>{
    console.log("Im Endpoint angekommen")
    console.log(props.newItems);
-   if(items.length < 15){
-    if(props.newItems.length != 0){
-      setItems(items => [...items, props.newItems]);
+   if(loaded){
+     /*
+    if(items.length >= (amount -1)){
+      setBds(false);
+      console.log(amount)
      }
-   }else{
-     console.log("Maximum erreicht")
+     */
+     if(items.length < amount){
+      if(props.newItems.length != 0){
+        //hier dann adden und rerendern
+        //setItems(items => [...items, props.newItems]);
+       }
+     }else{
+       console.log("Maximum erreicht")
+     }
    }
-   
   },[props.newItems])
+
+  
 
   let DeleteItem = (id) =>{
     //fetch
     console.log("ist angekommen DELETE")
     console.log(id)
+
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: props.user,
+        id: parseInt(id)
+       })
+  };
+    fetch("http://localhost:8080/delete",requestOptions)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+      },
+      (error) => {
+       console.log("failed fetching delete")
+      }
+    )
+  }
+
+  let merge = () =>{
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: props.user,
+       })
+  };
+    fetch("http://localhost:8080/merge",requestOptions)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result);
+        if(result == "sucess"){
+          setErr( <EuiToast
+            title="Merged to Playlist"
+            color="success"
+            iconType="check"
+            onClick = {() =>setErr(<div></div>)}
+          >
+            <p>Sucess</p>
+          </EuiToast>)
+        }else{
+          setErr( <EuiToast
+            title="Failed Merged to Playlist"
+            color="danger"
+            iconType="warning"
+            onClick = {() =>setErr(<div></div>)}
+          >
+            <p>Sucess</p>
+          </EuiToast>)
+        }
+      },
+      (error) => {
+       console.log("failed fetching delete")
+      }
+    )
   }
 
   const columns = [
@@ -39,7 +171,7 @@ export const UserTable = (props) => {
       'data-test-subj': 'firstNameCell',
       render: (name) => (
         <EuiImage
-      size="s"
+      size="50px"
       hasShadow
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
@@ -89,7 +221,7 @@ export const UserTable = (props) => {
         }else{
           setToggler(true)
         }
-          setModalrenderer(<Delete del={(id) => DeleteItem(id)} toggle={toggler} show={item.songname}/>)
+          setModalrenderer(<Delete del={(id) => DeleteItem(id)} toggle={toggler} show={item.id}/>)
         }
       },
       'data-test-subj': `cell-${id}-${field}`,
@@ -99,9 +231,8 @@ export const UserTable = (props) => {
 
   return (
     <div>
-      <h3>Hi {props.user}</h3>
-      <br/>
-    <h2>Bucket ({items.length} of 15)</h2><br/>
+    <p>Bucket ({items.length} of {amount})</p><br/>
+    <div className={"eui-yScroll bucket"}>
     <EuiBasicTable
       items={items}
       rowHeader="firstName"
@@ -109,9 +240,11 @@ export const UserTable = (props) => {
       rowProps={getRowProps}
       cellProps={getCellProps}
     />
+    </div>
     {modalrender}
     <EuiSpacer/>
-    <EuiButton isDisabled={true} color="primary">Merge</EuiButton>
+    {err}
+    <EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton>
     </div>
   );
 };

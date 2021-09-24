@@ -57,14 +57,14 @@ export const PageLay = (props) => {
     localStorage.setItem("user",'')
     window.location.reload();
   }
-
+  let title = "Hallo "+ props.user
   return(
     <EuiPage paddingSize="none">
       <EuiPageBody>
         <EuiPageHeader
           restrictWidth
           paddingSize="l"
-          pageTitle="PlayListTogether"
+          pageTitle={title}
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
           { label: 'Theme',  onClick: () => props.toggleTheme()},
