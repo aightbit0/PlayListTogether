@@ -2,7 +2,6 @@
 import React, { useState,useEffect } from 'react';
 
 import {
-  EuiButton,
   EuiConfirmModal,
   EuiFlexGroup,
   EuiFlexItem,
@@ -15,18 +14,22 @@ export const Dislike= (props) => {
   const closeModal = () => setIsModalVisible(false);
   
   useEffect(() =>{
-    console.log("im dislike");
     setIsModalVisible(true);
   },[props.toggle])
 
   let modal;
+
+  let confirmHandler = () =>{
+    props.dis(props.show)
+    closeModal();
+  }
 
   if (isModalVisible) {
     modal = (
       <EuiConfirmModal
         title={props.show}
         onCancel={closeModal}
-        onConfirm={() => props.dis(props.show)}
+        onConfirm={() => confirmHandler()}
         cancelButtonText="No, don't do it"
         confirmButtonText="Yes, do it"
         defaultFocusedButton="confirm"

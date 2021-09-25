@@ -6,6 +6,7 @@ import {
   EuiButton,
   EuiSpacer,
   EuiToast,
+  EuiLoadingChart,
 } from '@elastic/eui';
 import { Delete } from './Delete';
 
@@ -17,6 +18,7 @@ export const UserTable = (props) => {
   const [err, setErr] = useState(<div></div>);
   const [amount, setAmount] = useState(0);
   const [loaded, setLoaded] = useState(false);
+  const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl" />)
 
   useEffect(() =>{
     if(props.user){
@@ -51,8 +53,9 @@ export const UserTable = (props) => {
           localStorage.setItem("user", '');
           window.location.reload();
         }else{
-          console.log(result);
+          //console.log(result);
           setItems(result);
+          setLoadingAnimation(<div></div>);
           setLoaded(true)
         }
       },
@@ -69,7 +72,7 @@ export const UserTable = (props) => {
     setErr( <EuiToast
       title="Something went wrong"
       color="danger"
-      iconType="warning"
+      iconType="alert"
       onClick = {() =>setErr(<div></div>)}
     ></EuiToast>)
   }
@@ -80,7 +83,7 @@ export const UserTable = (props) => {
     .then(
       (result) => {
         setAmount(parseInt(result));
-        console.log(result);
+        //console.log(result);
       },
       (error) => {
        console.log("failed fetching amount")
@@ -91,8 +94,8 @@ export const UserTable = (props) => {
   }
 
   useEffect(() =>{
-   console.log("Im Endpoint angekommen")
-   console.log(props.newItems);
+   //console.log("Im Endpoint angekommen")
+   //console.log(props.newItems);
    if(loaded){
      if(items.length < amount){
       if(props.newItems.length != 0){
@@ -100,7 +103,12 @@ export const UserTable = (props) => {
         //setItems(items => [...items, props.newItems]);
        }
      }else{
-       console.log("Maximum erreicht")
+       setErr( <EuiToast
+        title="MAXIMUM"
+        color="danger"
+        iconType="alert"
+        onClick = {() =>setErr(<div></div>)}
+      ></EuiToast>)
      }
    }
   },[props.newItems])
@@ -108,9 +116,7 @@ export const UserTable = (props) => {
   
 
   let DeleteItem = (id) =>{
-    console.log("ist angekommen DELETE")
-    console.log(id)
-
+    //console.log(id)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -124,11 +130,15 @@ export const UserTable = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result);
-        if(result != "sucess"){
-          console.log(result);
-          setItems(result);
+        //console.log(result);
+        if(result == "sucess"){
+          //console.log(result);
           setLoaded(true)
+          loadBucket();
+        }else{
+          localStorage.setItem("token", '');
+          localStorage.setItem("user", '');
+          window.location.reload();
         }
       },
       (error) => {
@@ -151,7 +161,7 @@ export const UserTable = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result);
+        //console.log(result);
         if(result == "sucess"){
           setErr( <EuiToast
             title="Merged to Playlist"
@@ -161,10 +171,11 @@ export const UserTable = (props) => {
           >
             <p>Sucess</p>
           </EuiToast>)
+          loadBucket();
         }else{
-          console.log(result);
-        setItems(result);
-        setLoaded(true)
+          localStorage.setItem("token", '');
+          localStorage.setItem("user", '');
+          window.location.reload();
         }
       },
       (error) => {
@@ -181,7 +192,7 @@ export const UserTable = (props) => {
       'data-test-subj': 'firstNameCell',
       render: (name) => (
         <EuiImage
-      size="50px"
+      size="60px"
       hasShadow
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
@@ -243,6 +254,7 @@ export const UserTable = (props) => {
     <div>
     <p>Bucket ({items.length} of {amount})</p><br/>
     {err}
+    {loadinganimation}
     <div className={"eui-yScroll bucket"}>
     <EuiBasicTable
       items={items}

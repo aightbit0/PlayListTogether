@@ -50,7 +50,7 @@ function App() {
       .then(response => response.json())
       .then(
         (result) => {
-          console.log(result)
+          //console.log(result)
           if(result != "acess denied"){
             localStorage.setItem('token', result);
             localStorage.setItem('user', theuser);
@@ -67,8 +67,6 @@ function App() {
           }
         },
         (error) => {
-         console.log("fail")
-          console.log(error);
           setErr(<EuiToast
             title="No Connection"
             color="danger"

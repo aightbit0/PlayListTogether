@@ -4,6 +4,7 @@ import {
   EuiLink,
   EuiImage,
   EuiToast,
+  EuiLoadingChart,
 } from '@elastic/eui';
 import { Dislike } from './Dislike';
 
@@ -13,6 +14,8 @@ export const PublicPlaylist = (props) => {
   const [toggler,setToggler] = useState(true)
   const [items, setItems] = useState([])
   const [err, setErr] = useState(<div></div>);
+  const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl"  />);
+
 
   useEffect(() =>{
     if(props.user){
@@ -25,14 +28,14 @@ export const PublicPlaylist = (props) => {
     setErr( <EuiToast
       title="Something went wrong"
       color="danger"
-      iconType="warning"
+      iconType="alert"
       onClick = {() =>setErr(<div></div>)}
     ></EuiToast>)
   }
 
   let loadPlaylist = async () =>{
-    console.log(localStorage.getItem("token"));
-    console.log(props.user);
+    //console.log(localStorage.getItem("token"));
+    //console.log(props.user);
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -50,8 +53,9 @@ export const PublicPlaylist = (props) => {
           localStorage.setItem("user", '');
           window.location.reload();
         }else{
-          console.log(result);
+          //console.log(result);
           setItems(result);
+          setLoadingAnimation(<div></div>)
         }
       },
       (error) => {
@@ -64,10 +68,7 @@ export const PublicPlaylist = (props) => {
   }
 
   let DislikeItem = (id) =>{
-    //fetch
-    console.log("ist angekommen DISLIKE")
-    console.log(id)
-
+    //console.log(id)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -81,11 +82,13 @@ export const PublicPlaylist = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result);
+        //console.log(result);
         if(result != "sucess"){
           localStorage.setItem("token", '');
           localStorage.setItem("user", '');
           window.location.reload();
+        }else{
+          loadPlaylist();
         }
       },
       (error) => {
@@ -107,7 +110,6 @@ export const PublicPlaylist = (props) => {
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
       src={name}
-      
     />
       ),
     },
@@ -165,8 +167,9 @@ export const PublicPlaylist = (props) => {
   return (
     <div>
     <h2>Playlist ({items.length})</h2><br/>
+    {err}
+    {loadinganimation}
     <div className={"eui-yScroll play"}>
-      {err}
     <EuiBasicTable
       items={items}
       rowHeader="firstName"

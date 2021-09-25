@@ -21,18 +21,16 @@ export const PageLay = (props) => {
     <UserTable newItems={nitems}/></div>)
 
   let reloadTable = (items) =>{
-    console.log("angekommen im reloadTable")
+    //console.log("angekommen im reloadTable")
     setNItems(items)
   }
 
   useEffect(() => {
-    console.log("nitems haben sich geändert")
     setContent(<div><Search reload={(items) => reloadTable(items)} user={props.user}/>
         <UserTable newItems={nitems} user={props.user}/></div>)
    },[nitems]);
 
   useEffect(() => {
-   console.log(bucketSelected)
     if(bucketSelected){
       setContent(<div><Search reload={(items) => reloadTable(items)} user={props.user}/>
         <UserTable newItems={nitems} user={props.user}/></div>)

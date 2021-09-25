@@ -15,18 +15,23 @@ export const Delete= (props) => {
   const closeModal = () => setIsModalVisible(false);
   
   useEffect(() =>{
-    console.log("im delete");
+    //console.log("im delete");
     setIsModalVisible(true);
   },[props.toggle])
 
   let modal;
+
+  let confirmHandler = () =>{
+    props.del(props.show)
+    closeModal();
+  }
 
   if (isModalVisible) {
     modal = (
       <EuiConfirmModal
         title={props.show}
         onCancel={closeModal}
-        onConfirm={() => props.del(props.show)}
+        onConfirm={() => confirmHandler()}
         cancelButtonText="No, don't do it"
         confirmButtonText="Yes, do it"
         defaultFocusedButton="confirm"

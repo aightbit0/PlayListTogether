@@ -70,7 +70,7 @@ export const ResultShower = (props) => {
       .then(
         (result) => {
           if(result != "acess denied"){
-            console.log(result);
+           // console.log(result);
             props.setBack(result);
           }else{
             localStorage.setItem("token", '');
@@ -79,8 +79,6 @@ export const ResultShower = (props) => {
           }
         },
         (error) => {
-         console.log("fail")
-          console.log(error);
           setErr(<EuiToast
             title="No Connection"
             color="danger"
@@ -91,12 +89,11 @@ export const ResultShower = (props) => {
           </EuiToast>)
         }
       )
-   
   }
 
   let renderThisShit = (res) =>{
     let objekt = JSON.parse(res);
-    console.log(objekt.length)
+    //console.log(objekt.length)
     let stuff = [];
     objekt.map((i)=>{
       stuff.push(
@@ -131,19 +128,14 @@ export const ResultShower = (props) => {
     })
 
     let allTogether = <div className="eui-yScroll oka">
-
-
       {stuff}
-    
     </div>
-    
     setVal(allTogether);
   }
 
   useEffect(() => {
     if(props.search != ''){
         setTrigger('open');
-        console.log("wie oft ?")
         getData(props.search)
     }else{
         setErr(<div></div>)
@@ -154,6 +146,7 @@ export const ResultShower = (props) => {
 
   return (
       <div>
+         {err}
    <EuiButtonGroup
       legend="This is a basic group"    
     />
@@ -172,7 +165,7 @@ export const ResultShower = (props) => {
         {val}
       </EuiPanel>
     </EuiAccordion>
-        {err}
+       
       </div>
   );
 };
