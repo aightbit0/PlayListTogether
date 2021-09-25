@@ -3,6 +3,7 @@ import {
   EuiBasicTable,
   EuiLink,
   EuiImage,
+  EuiToast,
 } from '@elastic/eui';
 import { Dislike } from './Dislike';
 
@@ -11,12 +12,23 @@ export const PublicPlaylist = (props) => {
   const [modalrender,setModalrenderer] = useState(<div></div>)
   const [toggler,setToggler] = useState(true)
   const [items, setItems] = useState([])
+  const [err, setErr] = useState(<div></div>);
 
   useEffect(() =>{
     if(props.user){
       loadPlaylist();
     }
   },[props.user])
+
+
+  let PrintError = () =>{
+    setErr( <EuiToast
+      title="Something went wrong"
+      color="danger"
+      iconType="warning"
+      onClick = {() =>setErr(<div></div>)}
+    ></EuiToast>)
+  }
 
   let loadPlaylist = async () =>{
     console.log(localStorage.getItem("token"));
@@ -33,11 +45,18 @@ export const PublicPlaylist = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result);
-        setItems(result);
+        if(result == "no acess"){
+          localStorage.setItem("token", '');
+          localStorage.setItem("user", '');
+          window.location.reload();
+        }else{
+          console.log(result);
+          setItems(result);
+        }
       },
       (error) => {
        console.log("failed fetching amount")
+       PrintError();
       }
     )
 
@@ -63,9 +82,15 @@ export const PublicPlaylist = (props) => {
     .then(
       (result) => {
         console.log(result);
+        if(result != "sucess"){
+          localStorage.setItem("token", '');
+          localStorage.setItem("user", '');
+          window.location.reload();
+        }
       },
       (error) => {
        console.log("failed fetching delete")
+       PrintError();
       }
     )
   }
@@ -139,8 +164,9 @@ export const PublicPlaylist = (props) => {
 
   return (
     <div>
-    <h2>Die Playlist ({items.length})</h2><br/>
+    <h2>Playlist ({items.length})</h2><br/>
     <div className={"eui-yScroll play"}>
+      {err}
     <EuiBasicTable
       items={items}
       rowHeader="firstName"

@@ -15,7 +15,7 @@ export const UserTable = (props) => {
   const [items, setItems] = useState([])
   const [bds, setBds] = useState(true);
   const [err, setErr] = useState(<div></div>);
-  const [amount, setAmount] = useState(1);
+  const [amount, setAmount] = useState(0);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() =>{
@@ -46,16 +46,32 @@ export const UserTable = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result);
-        setItems(result);
-        setLoaded(true)
+        if(result == "no acess"){
+          localStorage.setItem("token", '');
+          localStorage.setItem("user", '');
+          window.location.reload();
+        }else{
+          console.log(result);
+          setItems(result);
+          setLoaded(true)
+        }
       },
       (error) => {
        console.log("failed fetching bucket")
+       PrintError();
       }
     )
    
     return
+  }
+
+  let PrintError = () =>{
+    setErr( <EuiToast
+      title="Something went wrong"
+      color="danger"
+      iconType="warning"
+      onClick = {() =>setErr(<div></div>)}
+    ></EuiToast>)
   }
 
   let getamount = async () =>{
@@ -63,13 +79,12 @@ export const UserTable = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        
         setAmount(parseInt(result));
         console.log(result);
-        
       },
       (error) => {
        console.log("failed fetching amount")
+       PrintError();
       }
     )
     return
@@ -79,12 +94,6 @@ export const UserTable = (props) => {
    console.log("Im Endpoint angekommen")
    console.log(props.newItems);
    if(loaded){
-     /*
-    if(items.length >= (amount -1)){
-      setBds(false);
-      console.log(amount)
-     }
-     */
      if(items.length < amount){
       if(props.newItems.length != 0){
         //hier dann adden und rerendern
@@ -99,7 +108,6 @@ export const UserTable = (props) => {
   
 
   let DeleteItem = (id) =>{
-    //fetch
     console.log("ist angekommen DELETE")
     console.log(id)
 
@@ -117,9 +125,15 @@ export const UserTable = (props) => {
     .then(
       (result) => {
         console.log(result);
+        if(result != "sucess"){
+          console.log(result);
+          setItems(result);
+          setLoaded(true)
+        }
       },
       (error) => {
        console.log("failed fetching delete")
+       PrintError();
       }
     )
   }
@@ -148,18 +162,14 @@ export const UserTable = (props) => {
             <p>Sucess</p>
           </EuiToast>)
         }else{
-          setErr( <EuiToast
-            title="Failed Merged to Playlist"
-            color="danger"
-            iconType="warning"
-            onClick = {() =>setErr(<div></div>)}
-          >
-            <p>Sucess</p>
-          </EuiToast>)
+          console.log(result);
+        setItems(result);
+        setLoaded(true)
         }
       },
       (error) => {
        console.log("failed fetching delete")
+       PrintError();
       }
     )
   }
@@ -232,6 +242,7 @@ export const UserTable = (props) => {
   return (
     <div>
     <p>Bucket ({items.length} of {amount})</p><br/>
+    {err}
     <div className={"eui-yScroll bucket"}>
     <EuiBasicTable
       items={items}
@@ -243,7 +254,7 @@ export const UserTable = (props) => {
     </div>
     {modalrender}
     <EuiSpacer/>
-    {err}
+    
     <EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton>
     </div>
   );

@@ -10,7 +10,7 @@ import {
 
 export const Delete= (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDestroyModalVisible, setIsDestroyModalVisible] = useState(false);
+  
 
   const closeModal = () => setIsModalVisible(false);
   
