@@ -52,43 +52,7 @@ export const ResultShower = (props) => {
 
   let addToBucket = (obj) =>{
     console.log(obj)
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: props.user, 
-        token: localStorage.getItem("token"), 
-        uri: obj.uri, 
-        songname: obj.name, 
-        artist: obj.album.artists[0].name, 
-        picture:obj.album.images[0].url,
-        url: obj.external_urls.spotify,
-       })
-  };
-
-  fetch('http://localhost:8080/addsongtobucket', requestOptions)
-      .then(response => response.json())
-      .then(
-        (result) => {
-          if(result != "acess denied"){
-           // console.log(result);
-            props.setBack(result);
-          }else{
-            localStorage.setItem("token", '');
-            localStorage.setItem("user", '');
-            window.location.reload();
-          }
-        },
-        (error) => {
-          setErr(<EuiToast
-            title="No Connection"
-            color="danger"
-            iconType="alert"
-            onClick = {() =>setErr(<div></div>)}
-          >
-            <p>No Connection</p>
-          </EuiToast>)
-        }
-      )
+    props.setBack(obj);
   }
 
   let renderThisShit = (res) =>{
@@ -136,7 +100,11 @@ export const ResultShower = (props) => {
   useEffect(() => {
     if(props.search != ''){
         setTrigger('open');
-        getData(props.search)
+        const timer = setTimeout(() => {
+          getData(props.search)
+        }, 500);
+        return () =>{clearTimeout(timer);};
+        
     }else{
         setErr(<div></div>)
         setTrigger('closed');

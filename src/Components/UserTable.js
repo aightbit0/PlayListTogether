@@ -22,16 +22,21 @@ export const UserTable = (props) => {
 
   useEffect(() =>{
     if(props.user){
-      getamount();
       loadBucket();
     }
   },[props.user])
 
   useEffect(() =>{
-    if(items.length == amount){
-      setBds(false)
-    }  
-  },[amount,items])
+    console.log("hallo")
+      
+        console.log(items.length)
+        console.log(amount)
+        if(items.length == amount){
+          setBds(false)
+        }else{
+          setBds(true)
+        }
+  },[amount, items])
 
   
   let loadBucket = async () =>{
@@ -54,9 +59,25 @@ export const UserTable = (props) => {
           window.location.reload();
         }else{
           //console.log(result);
-          setItems(result);
+          if(result){
+            setItems(result);
+          }
+         
           setLoadingAnimation(<div></div>);
-          setLoaded(true)
+          fetch("http://192.168.0.73:8080/getamount")
+          .then(res => res.json())
+          .then(
+            (result) => {
+              setAmount(parseInt(result));
+              setLoaded(true)
+              //console.log(result);
+            },
+            (error) => {
+            console.log("failed fetching amount")
+            PrintError();
+            }
+          )
+          
         }
       },
       (error) => {
@@ -94,13 +115,16 @@ export const UserTable = (props) => {
   }
 
   useEffect(() =>{
-   //console.log("Im Endpoint angekommen")
+   console.log("Im Endpoint angekommen")
    //console.log(props.newItems);
    if(loaded){
      if(items.length < amount){
       if(props.newItems.length != 0){
+        addSongToBucket(props.newItems)
+        loadBucket();
         //hier dann adden und rerendern
         //setItems(items => [...items, props.newItems]);
+        
        }
      }else{
        setErr( <EuiToast
@@ -112,6 +136,46 @@ export const UserTable = (props) => {
      }
    }
   },[props.newItems])
+
+
+  let addSongToBucket = (obj) =>{
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name: props.user, 
+        token: localStorage.getItem("token"), 
+        uri: obj.uri, 
+        songname: obj.name, 
+        artist: obj.album.artists[0].name, 
+        picture:obj.album.images[0].url,
+        url: obj.external_urls.spotify,
+       })
+  };
+
+  fetch('http://localhost:8080/addsongtobucket', requestOptions)
+      .then(response => response.json())
+      .then(
+        (result) => {
+          if(result != "acess denied"){
+           // console.log(result);
+          }else{
+            localStorage.setItem("token", '');
+            localStorage.setItem("user", '');
+            window.location.reload();
+          }
+        },
+        (error) => {
+          setErr(<EuiToast
+            title="No Connection"
+            color="danger"
+            iconType="alert"
+            onClick = {() =>setErr(<div></div>)}
+          >
+            <p>No Connection</p>
+          </EuiToast>)
+        }
+      )
+  }
 
   
 
