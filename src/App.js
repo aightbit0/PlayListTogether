@@ -43,7 +43,7 @@ function App() {
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: theuser, password: passwd, token: "hjsgdhjsdf56sd7f57dsfgjsdgfsdzf67sd65f7sdgjehsdofd7f9s" })
+      body: JSON.stringify({ name: theuser, password: passwd })
   };
 
   fetch('http://192.168.0.73:8080/login', requestOptions)

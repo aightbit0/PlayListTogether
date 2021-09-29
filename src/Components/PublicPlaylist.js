@@ -38,13 +38,13 @@ export const PublicPlaylist = (props) => {
     //console.log(props.user);
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: props.user,
        })
   };
-    fetch("http://192.168.0.73:8080/getplaylist",requestOptions)
+    fetch("http://192.168.0.73:8080/a/getplaylist",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -78,7 +78,7 @@ export const PublicPlaylist = (props) => {
         id: parseInt(id)
        })
   };
-    fetch("http://localhost:8080/dislike",requestOptions)
+    fetch("http://localhost:8080/a/dislike",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {

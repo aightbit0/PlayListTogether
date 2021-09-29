@@ -42,14 +42,14 @@ export const UserTable = (props) => {
   let loadBucket = async () =>{
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: props.user,
        })
   };
   
-    fetch("http://192.168.0.73:8080/getbucket",requestOptions)
+    fetch("http://192.168.0.73:8080/a/getbucket",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -98,22 +98,6 @@ export const UserTable = (props) => {
     ></EuiToast>)
   }
 
-  let getamount = async () =>{
-    fetch("http://192.168.0.73:8080/getamount")
-    .then(res => res.json())
-    .then(
-      (result) => {
-        setAmount(parseInt(result));
-        //console.log(result);
-      },
-      (error) => {
-       console.log("failed fetching amount")
-       PrintError();
-      }
-    )
-    return
-  }
-
   useEffect(() =>{
    console.log("Im Endpoint angekommen")
    //console.log(props.newItems);
@@ -141,7 +125,7 @@ export const UserTable = (props) => {
   let addSongToBucket = (obj) =>{
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ name: props.user, 
         token: localStorage.getItem("token"), 
         uri: obj.uri, 
@@ -152,7 +136,7 @@ export const UserTable = (props) => {
        })
   };
 
-  fetch('http://localhost:8080/addsongtobucket', requestOptions)
+  fetch('http://localhost:8080/a/addsongtobucket', requestOptions)
       .then(response => response.json())
       .then(
         (result) => {
@@ -190,7 +174,7 @@ export const UserTable = (props) => {
         id: parseInt(id)
        })
   };
-    fetch("http://localhost:8080/delete",requestOptions)
+    fetch("http://localhost:8080/a/delete",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -221,7 +205,7 @@ export const UserTable = (props) => {
         user: props.user,
        })
   };
-    fetch("http://localhost:8080/merge",requestOptions)
+    fetch("http://localhost:8080/a/merge",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
