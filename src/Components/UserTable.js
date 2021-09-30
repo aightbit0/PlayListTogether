@@ -136,12 +136,12 @@ export const UserTable = (props) => {
        })
   };
 
-  fetch('http://localhost:8080/a/addsongtobucket', requestOptions)
+  fetch('http://192.168.0.73:8080/a/addsongtobucket', requestOptions)
       .then(response => response.json())
       .then(
         (result) => {
           if(result != "acess denied"){
-           // console.log(result);
+           loadBucket();
           }else{
             localStorage.setItem("token", '');
             localStorage.setItem("user", '');
@@ -167,14 +167,14 @@ export const UserTable = (props) => {
     //console.log(id)
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: props.user,
         id: parseInt(id)
        })
   };
-    fetch("http://localhost:8080/a/delete",requestOptions)
+    fetch("http://192.168.0.73:8080/a/delete",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -182,6 +182,14 @@ export const UserTable = (props) => {
         if(result == "sucess"){
           //console.log(result);
           setLoaded(true)
+          setErr( <EuiToast
+            title="Deleted Song"
+            color="success"
+            iconType="check"
+            onClick = {() =>setErr(<div></div>)}
+          >
+            <p>Sucess</p>
+          </EuiToast>)
           loadBucket();
         }else{
           localStorage.setItem("token", '');
@@ -199,7 +207,7 @@ export const UserTable = (props) => {
   let merge = () =>{
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: props.user,

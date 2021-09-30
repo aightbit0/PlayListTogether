@@ -54,7 +54,10 @@ export const PublicPlaylist = (props) => {
           window.location.reload();
         }else{
           //console.log(result);
-          setItems(result);
+          if(result){
+            setItems(result);
+          }
+         
           setLoadingAnimation(<div></div>)
         }
       },
@@ -71,14 +74,14 @@ export const PublicPlaylist = (props) => {
     //console.log(id)
     const requestOptions = {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+localStorage.getItem("token")},
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: props.user,
         id: parseInt(id)
        })
   };
-    fetch("http://localhost:8080/a/dislike",requestOptions)
+    fetch("http://192.168.0.73:8080/a/dislike",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -132,7 +135,7 @@ export const PublicPlaylist = (props) => {
       name: 'User',
     },
     {
-      field: 'dislikes',
+      field: 'dislike',
       name: 'Dislikes',
 
     },

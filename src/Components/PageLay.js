@@ -51,10 +51,30 @@ export const PageLay = (props) => {
   }
 
   let logOut = () =>{
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: props.user,
+       })
+  };
+  
+    fetch("http://192.168.0.73:8080/a/logout",requestOptions)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        console.log(result)
+      },
+      (error) => {
+       console.log("failed ")
+      }
+    )
     localStorage.setItem("token",'')
     localStorage.setItem("user",'')
     window.location.reload();
   }
+
   let title = "Hallo "+ props.user
   return(
     <EuiPage paddingSize="none">
