@@ -34,7 +34,7 @@ export const Dislike= (props) => {
         confirmButtonText="Yes, do it"
         defaultFocusedButton="confirm"
       >
-        <p>Are you sure you want to do this?</p>
+        <p>Do you want to dislike the Song?</p>
       </EuiConfirmModal>
     );
   }

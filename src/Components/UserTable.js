@@ -31,7 +31,7 @@ export const UserTable = (props) => {
       
         console.log(items.length)
         console.log(amount)
-        if(items.length == amount){
+        if(items.length != 0){
           setBds(false)
         }else{
           setBds(true)
@@ -61,6 +61,8 @@ export const UserTable = (props) => {
           //console.log(result);
           if(result){
             setItems(result);
+          }else{
+            setItems([]);
           }
          
           setLoadingAnimation(<div></div>);
@@ -81,6 +83,9 @@ export const UserTable = (props) => {
         }
       },
       (error) => {
+        localStorage.setItem("token", '');
+        localStorage.setItem("user", '');
+        window.location.reload();
        console.log("failed fetching bucket")
        PrintError();
       }
@@ -123,6 +128,7 @@ export const UserTable = (props) => {
 
 
   let addSongToBucket = (obj) =>{
+    console.log(obj.uri)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
@@ -140,9 +146,22 @@ export const UserTable = (props) => {
       .then(response => response.json())
       .then(
         (result) => {
+          if(result == "exists"){
+            setErr(<EuiToast
+              title="SONG EXIST"
+              color="danger"
+              iconType="alert"
+              onClick = {() =>setErr(<div></div>)}
+            >
+              <p>The Song exists already</p>
+            </EuiToast>)
+          }
+
           if(result != "acess denied"){
            loadBucket();
-          }else{
+          }
+        
+          else{
             localStorage.setItem("token", '');
             localStorage.setItem("user", '');
             window.location.reload();
@@ -213,7 +232,7 @@ export const UserTable = (props) => {
         user: props.user,
        })
   };
-    fetch("http://localhost:8080/a/merge",requestOptions)
+    fetch("http://192.168.0.73:8080/a/merge",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -308,7 +327,7 @@ export const UserTable = (props) => {
 
   return (
     <div>
-    <p>Bucket ({items.length} of {amount})</p><br/>
+    <p>Bucket ({items.length} of {amount})<EuiSpacer/><EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton></p><br/>
     {err}
     {loadinganimation}
     <div className={"eui-yScroll bucket"}>
@@ -321,9 +340,6 @@ export const UserTable = (props) => {
     />
     </div>
     {modalrender}
-    <EuiSpacer/>
-    
-    <EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton>
     </div>
   );
 };

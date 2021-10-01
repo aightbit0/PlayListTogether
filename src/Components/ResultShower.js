@@ -118,7 +118,7 @@ export const ResultShower = (props) => {
    <EuiButtonGroup
       legend="This is a basic group"    
     />
-    <EuiSpacer />
+ 
     <EuiAccordion
       arrowDisplay="none"
       id={htmlIdGenerator()()}

@@ -81,6 +81,8 @@ function App() {
   
   return (
     <div className="App">
+      <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
+
       {err}
       {cont}
     </div>

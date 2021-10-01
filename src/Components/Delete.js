@@ -37,7 +37,7 @@ export const Delete= (props) => {
         defaultFocusedButton="confirm"
         buttonColor="danger"
       >
-        <p>Are you sure you want to do this?</p>
+        <p>Do you want to delete this Song?</p>
       </EuiConfirmModal>
     );
   }

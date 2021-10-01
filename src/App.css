@@ -24,6 +24,18 @@
   margin-left: 2%;
 }
 
+.tp{
+  font-size: 14px !important;
+}
+
+.euiTab__content{
+  font-size: 14px !important;
+}
+
+.euiTab{
+  height: 40px !important;
+}
+
 
 
 .audio{

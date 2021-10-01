@@ -80,9 +80,10 @@ export const PageLay = (props) => {
     <EuiPage paddingSize="none">
       <EuiPageBody>
         <EuiPageHeader
+        className={"tp"}
           restrictWidth
-          paddingSize="l"
-          pageTitle={title}
+          paddingSize="s"
+         
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
           { label: 'Theme',  onClick: () => props.toggleTheme()},
