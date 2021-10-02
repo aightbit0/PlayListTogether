@@ -5,6 +5,7 @@ import {
   EuiImage,
   EuiToast,
   EuiLoadingChart,
+  EuiIcon,
 } from '@elastic/eui';
 import { Dislike } from './Dislike';
 
@@ -120,8 +121,8 @@ export const PublicPlaylist = (props) => {
       field: 'songname',
       name: 'Title',
       truncateText: true,
-      render: (name) => (
-        <EuiLink href="#" target="_blank">
+      render: (name, item) => (
+        <EuiLink href={item.url} target="_blank">
           {name}
         </EuiLink>
       ),
@@ -139,6 +140,14 @@ export const PublicPlaylist = (props) => {
       name: 'Dislikes',
 
     },
+    {
+      field: 'd',
+      name: 'dislike',
+      truncateText: true,
+      render: (item) => (
+        <EuiIcon size="m" type="starMinusEmpty" />
+      ),
+    }
   ];
 
   const getRowProps = (item) => {
@@ -146,14 +155,6 @@ export const PublicPlaylist = (props) => {
     return {
       'data-test-subj': `row-${id}`,
       className: 'customRowClass',
-      onClick: () => {
-          if(toggler){
-              setToggler(false)
-          }else{
-            setToggler(true)
-          }
-          setModalrenderer(<Dislike dis={(id) => DislikeItem(id)} toggle={toggler} show={item.id}/>)
-      },
     };
   };
 
@@ -164,6 +165,16 @@ export const PublicPlaylist = (props) => {
       className: 'customCellClass',
       'data-test-subj': `cell-${id}-${field}`,
       textOnly: true,
+      onClick: () => {
+        if(field == "d"){
+          if(toggler){
+            setToggler(false)
+        }else{
+          setToggler(true)
+        }
+        setModalrenderer(<Dislike dis={(id) => DislikeItem(id)} toggle={toggler} show={item.id}/>)
+        }
+      },
     };
   };
 

@@ -10,14 +10,18 @@ import {
   EuiFlexGroup,
   EuiImage,
   EuiHealth,
+  EuiButtonIcon,
 
 } from '@elastic/eui';
+import { AudioPlayer } from './AudioPlayer';
 
 export const ResultShower = (props) => {
   const [trigger, setTrigger] = useState('closed');
   const [val, setVal] = useState(<div></div>);
   const [isload, setisload] = useState(false);
   const [err, setErr] = useState(<div></div>);
+  
+
   const onToggle = (isOpen) => {
     const newState = isOpen ? 'open' : 'closed';
     setTrigger(newState); 
@@ -55,23 +59,37 @@ export const ResultShower = (props) => {
     props.setBack(obj);
   }
 
+  /*
+  let AudioPlayer = (audioObj) =>{
+   
+    if(toggle1On){
+      setToggle1On(false);
+      console.log("play oder")
+      audioObj.play();
+    }else{
+      audioObj.pause();
+    }
+    
+   
+  }
+  */
+
   let renderThisShit = (res) =>{
     let objekt = JSON.parse(res);
     //console.log(objekt.length)
     let stuff = [];
     objekt.map((i)=>{
       stuff.push(
-      <EuiFlexGroup responsive={true} onClick = {() =>addToBucket(i)} alignItems="center">
-      <EuiFlexItem  grow={false} >
-      <EuiImage
+        <div className={"results"}>
+          <EuiImage
+      onClick = {() =>addToBucket(i)}
       size="60px"
       hasShadow
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
       src={i.album.images[0].url}
     />
-    
-      </EuiFlexItem>
+    <AudioPlayer end={trigger} audiourl={i.preview_url}/>
       <EuiFlexItem grow={false}>
       <EuiHealth textSize="m" color="success">
         {i.name}
@@ -80,18 +98,10 @@ export const ResultShower = (props) => {
       {i.album.artists[0].name}
     </EuiHealth>
       </EuiFlexItem>
-      <div>
-        <audio controls>
-        <source src={i.preview_url} type="audio/ogg"/>
-        <source src={i.preview_url} type="audio/mpeg"/>
-      Your browser does not support the audio element.
-      </audio>
-    </div>
-    <EuiSpacer/>
-    </EuiFlexGroup>)
+        </div>)
     })
 
-    let allTogether = <div className="eui-yScroll oka">
+    let allTogether = <div onScroll={() => document.getElementById("resmaker").focus()} className="eui-yScroll oka">
       {stuff}
     </div>
     setVal(allTogether);
@@ -121,7 +131,7 @@ export const ResultShower = (props) => {
  
     <EuiAccordion
       arrowDisplay="none"
-      id={htmlIdGenerator()()}
+      id={"resmaker"}
       forceState={trigger}
       onToggle={onToggle}
       buttonContent=""

@@ -7,6 +7,7 @@ import {
   EuiSpacer,
   EuiToast,
   EuiLoadingChart,
+  EuiIcon,
 } from '@elastic/eui';
 import { Delete } from './Delete';
 
@@ -158,6 +159,14 @@ export const UserTable = (props) => {
           }
 
           if(result != "acess denied"){
+            setErr( <EuiToast
+              title="Adeded to  Bucket"
+              color="success"
+              iconType="check"
+              onClick = {() =>setErr(<div></div>)}
+            >
+              <p>Sucess</p>
+            </EuiToast>)
            loadBucket();
           }
         
@@ -294,6 +303,14 @@ export const UserTable = (props) => {
       field: 'name',
       name: 'User',
     },
+    {
+      field: 'd',
+      name: 'delete',
+      truncateText: true,
+      render: (item) => (
+        <EuiIcon size="m" type="trash" />
+      ),
+    }
   ];
   
 
@@ -311,7 +328,7 @@ export const UserTable = (props) => {
     return {
       className: 'customCellClass',
       onClick: () => {
-        if(field != "songname"){
+        if(field == "d"){
           if(toggler){
             setToggler(false)
         }else{

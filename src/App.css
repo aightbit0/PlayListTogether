@@ -36,6 +36,14 @@
   height: 40px !important;
 }
 
+.results{
+  display: flex;
+  flex-direction: row;
+  padding-bottom: 15px;
+  padding-top: 15px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid #1BA9F5;
+}
 
 
 .audio{
