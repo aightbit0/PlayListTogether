@@ -344,7 +344,7 @@ export const UserTable = (props) => {
 
   return (
     <div>
-    <p>Bucket ({items.length} of {amount})<EuiSpacer/><EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton></p><br/>
+    <p>{props.user}s Bucket ({items.length} of {amount})<EuiSpacer/><EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton></p><br/>
     {err}
     {loadinganimation}
     <div className={"eui-yScroll bucket"}>

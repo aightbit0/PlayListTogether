@@ -87,11 +87,20 @@ export const PublicPlaylist = (props) => {
     .then(
       (result) => {
         //console.log(result);
-        if(result != "sucess"){
+        if(result == "failes"){
           localStorage.setItem("token", '');
           localStorage.setItem("user", '');
           window.location.reload();
-        }else{
+        }
+        if(result == "alredy"){
+          setErr( <EuiToast
+            title="Alredy Disliked"
+            color="danger"
+            iconType="alert"
+            onClick = {() =>setErr(<div></div>)}
+          ></EuiToast>)
+        }
+        else{
           loadPlaylist();
         }
       },
