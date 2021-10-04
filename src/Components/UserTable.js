@@ -28,16 +28,19 @@ export const UserTable = (props) => {
   },[props.user])
 
   useEffect(() =>{
-    console.log("hallo")
-      
-        console.log(items.length)
-        console.log(amount)
-        if(items.length != 0){
-          setBds(false)
-        }else{
-          setBds(true)
-        }
+    if(items.length != 0){
+      setBds(false)
+    }else{
+      setBds(true)
+    }
   },[amount, items])
+
+  let clear = () =>{
+    const timer = setTimeout(() => {
+      setErr(<div></div>)
+    }, 3000);
+    return () =>{clearTimeout(timer);};
+  }
 
   
   let loadBucket = async () =>{
@@ -59,7 +62,6 @@ export const UserTable = (props) => {
           localStorage.setItem("user", '');
           window.location.reload();
         }else{
-          //console.log(result);
           if(result){
             setItems(result);
           }else{
@@ -73,7 +75,6 @@ export const UserTable = (props) => {
             (result) => {
               setAmount(parseInt(result));
               setLoaded(true)
-              //console.log(result);
             },
             (error) => {
             console.log("failed fetching amount")
@@ -105,16 +106,11 @@ export const UserTable = (props) => {
   }
 
   useEffect(() =>{
-   console.log("Im Endpoint angekommen")
-   //console.log(props.newItems);
    if(loaded){
      if(items.length < amount){
       if(props.newItems.length != 0){
         addSongToBucket(props.newItems)
         loadBucket();
-        //hier dann adden und rerendern
-        //setItems(items => [...items, props.newItems]);
-        
        }
      }else{
        setErr( <EuiToast
@@ -129,7 +125,6 @@ export const UserTable = (props) => {
 
 
   let addSongToBucket = (obj) =>{
-    console.log(obj.uri)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
@@ -158,7 +153,7 @@ export const UserTable = (props) => {
             </EuiToast>)
           }
 
-          if(result != "acess denied"){
+          else if(result != "acess denied"){
             setErr( <EuiToast
               title="Adeded to  Bucket"
               color="success"
@@ -167,6 +162,7 @@ export const UserTable = (props) => {
             >
               <p>Sucess</p>
             </EuiToast>)
+            clear();
            loadBucket();
           }
         
@@ -189,10 +185,7 @@ export const UserTable = (props) => {
       )
   }
 
-  
-
   let DeleteItem = (id) =>{
-    //console.log(id)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
@@ -206,9 +199,7 @@ export const UserTable = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        //console.log(result);
-        if(result == "sucess"){
-          //console.log(result);
+         if(result == "sucess"){
           setLoaded(true)
           setErr( <EuiToast
             title="Deleted Song"
@@ -218,6 +209,7 @@ export const UserTable = (props) => {
           >
             <p>Sucess</p>
           </EuiToast>)
+          clear();
           loadBucket();
         }else{
           localStorage.setItem("token", '');
@@ -245,7 +237,6 @@ export const UserTable = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        //console.log(result);
         if(result == "sucess"){
           setErr( <EuiToast
             title="Merged to Playlist"
@@ -255,6 +246,7 @@ export const UserTable = (props) => {
           >
             <p>Sucess</p>
           </EuiToast>)
+          clear();
           loadBucket();
         }else{
           localStorage.setItem("token", '');

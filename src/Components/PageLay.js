@@ -12,18 +12,37 @@ import {
 } from '@elastic/eui';
 
 import { PublicPlaylist } from './PublicPlaylist';
+import { GroupComp } from './GroupComp';
+import { CreatePlaylist } from './CreatePlaylist';
 
 export const PageLay = (props) => {
   const [bucketSelected, setBucketSelected] = useState(true);
   const [playListSelected, setPlayListSelected] = useState(false);
+  const [groupSelected, setGroupSelected] = useState(false);
+  const [createSelected, setCreateSelected] = useState(false);
+  const [code, setCode] = useState('');
   const [nitems, setNItems] = useState([]);
   const [content, setContent] = useState(<div><Search/>
     <UserTable newItems={nitems}/></div>)
 
   let reloadTable = (items) =>{
-    //console.log("angekommen im reloadTable")
     setNItems(items)
   }
+
+  useEffect(() => {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const code = urlParams.get('code')
+    console.log(code);
+    setCode(code)
+    if(code){
+      console.log("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHh")
+      setCreate()
+     
+    }
+
+   
+   },[]);
 
   useEffect(() => {
     setContent(<div><Search reload={(items) => reloadTable(items)} user={props.user}/>
@@ -38,16 +57,40 @@ export const PageLay = (props) => {
     if(playListSelected){
       setContent(<div><PublicPlaylist user={props.user}/></div>)
     }
-  },[bucketSelected,playListSelected]);
+    if(groupSelected){
+      setContent(<GroupComp></GroupComp>)
+    }
+    if(createSelected){
+      setContent(<CreatePlaylist user={props.user} acode={code}></CreatePlaylist>)
+    }
+  },[bucketSelected,playListSelected,createSelected,groupSelected]);
 
   let setBucket = () =>{
     setBucketSelected(true)
     setPlayListSelected(false)
+    setGroupSelected(false)
+    setCreateSelected(false)
   }
 
   let setPlaylist = () =>{
     setBucketSelected(false)
+    setGroupSelected(false)
     setPlayListSelected(true)
+    setCreateSelected(false)
+  }
+
+  let setNewGroup = () =>{
+    setBucketSelected(false)
+    setGroupSelected(true)
+    setPlayListSelected(false)
+    setCreateSelected(false)
+  }
+
+  let setCreate = () =>{
+    setCreateSelected(true)
+    setBucketSelected(false)
+    setGroupSelected(false)
+    setPlayListSelected(false)
   }
 
   let logOut = () =>{
@@ -86,6 +129,8 @@ export const PageLay = (props) => {
          
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
+          { label: 'create Group', isSelected: groupSelected, onClick: () => {setNewGroup()} },
+          { label: 'create Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
           { label: 'Theme',  onClick: () => props.toggleTheme()},
           {label: "Log out",onClick: () => logOut()}]}
         />

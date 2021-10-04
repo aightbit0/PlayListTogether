@@ -59,21 +59,6 @@ export const ResultShower = (props) => {
     props.setBack(obj);
   }
 
-  /*
-  let AudioPlayer = (audioObj) =>{
-   
-    if(toggle1On){
-      setToggle1On(false);
-      console.log("play oder")
-      audioObj.play();
-    }else{
-      audioObj.pause();
-    }
-    
-   
-  }
-  */
-
   let renderThisShit = (res) =>{
     let objekt = JSON.parse(res);
     //console.log(objekt.length)

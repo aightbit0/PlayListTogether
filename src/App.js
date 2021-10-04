@@ -21,7 +21,6 @@ function App() {
     }
     if(localStorage.getItem('token') && localStorage.getItem('user')){
       if(localStorage.getItem('token') != '' && localStorage.getItem('user') != ''){
-        //fetch zur überprüfung
         setCont(<PageLay toggleTheme={() => themeChanger()} user={localStorage.getItem('user')}/>);
       }
     }
@@ -50,7 +49,6 @@ function App() {
       .then(response => response.json())
       .then(
         (result) => {
-          //console.log(result)
           if(result != "acess denied"){
             localStorage.setItem('token', result);
             localStorage.setItem('user', theuser);
@@ -82,7 +80,6 @@ function App() {
   return (
     <div className="App">
       <meta name="viewport" content="initial-scale=1, maximum-scale=1"/>
-
       {err}
       {cont}
     </div>
