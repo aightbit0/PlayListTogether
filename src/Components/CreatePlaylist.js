@@ -1,14 +1,19 @@
-import { EuiComboBox,EuiFieldText,EuiSpacer,EuiButton,EuiText } from '@elastic/eui';
+import { EuiComboBox,EuiFieldText,EuiSpacer,EuiButton,EuiText,EuiLink,EuiToast } from '@elastic/eui';
 
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
 
 export const CreatePlaylist= (props) => {
 const [clientId, setClientId] = useState('')
 const [secretId, setSecretId] = useState('')
 const [code, setCode] = useState('')
 const [oauth, setOAuth] = useState('')
+const [uris, setUris] = useState('')
+const [err, setErr] = useState(<div></div>);
 
+const [uid, setUid] = useState('')
+const [playlistname, setPlaylistname] = useState('')
+const [playlistId, setPlaylistId] = useState('')
 useEffect(() => {
     if(localStorage.getItem("client")){
        setClientId(localStorage.getItem("client"))
@@ -18,6 +23,10 @@ useEffect(() => {
         setSecretId(localStorage.getItem("secret"))
          
      }
+    if(localStorage.getItem("UserId")){
+      setUid(localStorage.getItem("UserId"))
+    }
+     getSongUris()
   },[]);
 
   useEffect(() => {
@@ -31,6 +40,114 @@ useEffect(() => {
 
 
   },[props.acode]);
+
+  let PrintError = () =>{
+    setErr( <EuiToast
+      title="Something went wrong"
+      color="danger"
+      iconType="alert"
+      onClick = {() =>setErr(<div></div>)}
+    ></EuiToast>)
+  }
+
+let setUidAndLocal = (va) =>{
+  localStorage.setItem("UserId",va)
+  setUid(va)
+}
+
+let getSongUris = () =>{
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
+    body: JSON.stringify({ 
+      token: localStorage.getItem("token"), 
+      user: props.user,
+     })
+};
+
+  fetch("http://192.168.0.73:8080/a/getsonguris",requestOptions)
+  .then(res => res.json())
+  .then(
+    (result) => {
+      
+      if(result){
+        setUris(result.join())
+      }
+      
+    },
+    (error) => {
+     PrintError()
+     console.log("failed fetching")
+    }
+  )
+}
+
+
+let createPlaylistPublic = () =>{
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+oauth},
+    body: JSON.stringify({ 
+      name: playlistname,
+      description: "Generated Playlist from PlayListTogether",
+      public: true
+     })
+};
+
+  fetch("https://api.spotify.com/v1/users/"+uid+"/playlists",requestOptions)
+  .then(res => res.json())
+  .then(
+    (result) => {
+
+      console.log(result)
+      setPlaylistId(result.id)
+      localStorage.setItem("genPlalist",result.external_urls.spotify)
+      setErr( <EuiToast
+        title="Created Playlist"
+        color="success"
+        iconType="check"
+        onClick = {() =>setErr(<div></div>)}
+      >
+        <p>Sucess</p>
+      </EuiToast>)
+      window.location.href = "http://localhost:3000/";
+    },
+    (error) => {
+      PrintError()
+     console.log("failed fetching")
+    }
+  )
+}
+
+
+
+let addSongsToPlaylistPublic = () =>{
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+oauth},
+    body: ''
+};
+
+  fetch("https://api.spotify.com/v1/playlists/"+playlistId+"/tracks?uris="+uris+"",requestOptions)
+  .then(res => res.json())
+  .then(
+    (result) => {
+      console.log(result)
+      setErr( <EuiToast
+        title="Songs added to  Playlist"
+        color="success"
+        iconType="check"
+        onClick = {() =>setErr(<div></div>)}
+      >
+        <p>Sucess</p>
+      </EuiToast>)
+    },
+    (error) => {
+      PrintError()
+     console.log("failed fetching")
+    }
+  )
+}
 
 
 let getAuthToken = (hcode) =>{
@@ -52,9 +169,10 @@ let getAuthToken = (hcode) =>{
         (result) => {
           console.log(result)
           setOAuth(result.access_token)
+
         },
         (error) => {
-         
+          PrintError()
          console.log("failed fetching")
       
         }
@@ -69,6 +187,7 @@ let authSpotify = () =>{
 }
   return (
       <div>
+        {err}
           <EuiFieldText
     placeholder="Client ID"
     value={clientId}
@@ -98,21 +217,30 @@ let authSpotify = () =>{
   /><EuiSpacer/>
    <EuiFieldText
     placeholder="User ID"
-    //value={code}
+    value={uid}
+    onChange={(e) => setUidAndLocal(e.target.value)}
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
     <EuiFieldText
     placeholder="Name of Playlist"
-    //value={code}
+    value={playlistname}
+    onChange={(e) => setPlaylistname(e.target.value)}
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
-  <EuiButton  color="primary">Create Playlist</EuiButton><EuiSpacer/>
+  <EuiButton onClick={() =>createPlaylistPublic()}  color="primary">Create Playlist</EuiButton><EuiSpacer/>
   <EuiFieldText
     placeholder="Songs"
-    //value={code}
+    value={uris}
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
-   <EuiButton  color="primary">Add Songs</EuiButton><EuiSpacer/>
+    <EuiFieldText
+    placeholder="Playlst ID"
+    value={playlistId}
+    onChange={(e) => setPlaylistId(e.target.value)}
+    aria-label="Use aria labels when no actual label is in use"
+  /><EuiSpacer/>
+   <EuiButton onClick={() =>addSongsToPlaylistPublic()}  color="primary">Add Songs</EuiButton><EuiSpacer/>
+   <EuiLink href={localStorage.getItem("genPlalist")} target={"_blank"}>{playlistname}</EuiLink>
     </div>
   );
 };
