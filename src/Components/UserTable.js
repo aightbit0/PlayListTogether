@@ -10,6 +10,8 @@ import {
   EuiIcon,
 } from '@elastic/eui';
 import { Delete } from './Delete';
+import { Collapse } from './Collaps';
+import { BACKENDURL } from '../constants';
 
 export const UserTable = (props) => {
   const [modalrender,setModalrenderer] = useState(<div></div>)
@@ -20,12 +22,34 @@ export const UserTable = (props) => {
   const [amount, setAmount] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl" />)
+  const [nav, setNav] = useState(<Collapse rerender = {(name) => rerender(name)}></Collapse>)
+  const [actualBucket, setActualBucket] = useState(localStorage.getItem("playlist"))
 
   useEffect(() =>{
     if(props.user){
-      loadBucket();
+      if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
+        loadBucket();
+      }else{
+        setLoadingAnimation(<div></div>);
+        setErr( <EuiToast
+          title="Please select a Playlist"
+          color="warning"
+          iconType="alert"
+          onClick = {() =>setErr(<div></div>)}
+        ></EuiToast>)
+      }
+     
     }
   },[props.user])
+
+  let rerender = (playlistname) =>{
+    localStorage.setItem("playlist",playlistname)
+
+    if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
+      setActualBucket(localStorage.getItem("playlist"))
+      loadBucket();
+    }
+  }
 
   useEffect(() =>{
     if(items.length != 0){
@@ -44,16 +68,18 @@ export const UserTable = (props) => {
 
   
   let loadBucket = async () =>{
+    console.log()
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
-        user: props.user,
+        user: localStorage.getItem("user"),
+        playlistname: localStorage.getItem("playlist")
        })
   };
   
-    fetch("http://192.168.0.73:8080/a/getbucket",requestOptions)
+    fetch(BACKENDURL+"/a/getbucket",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -69,7 +95,7 @@ export const UserTable = (props) => {
           }
          
           setLoadingAnimation(<div></div>);
-          fetch("http://192.168.0.73:8080/getamount")
+          fetch(BACKENDURL+"/a/getamount",requestOptions)
           .then(res => res.json())
           .then(
             (result) => {
@@ -135,10 +161,11 @@ export const UserTable = (props) => {
         artist: obj.album.artists[0].name, 
         picture:obj.album.images[0].url,
         url: obj.external_urls.spotify,
+        playlistname: localStorage.getItem("playlist")
        })
   };
 
-  fetch('http://192.168.0.73:8080/a/addsongtobucket', requestOptions)
+  fetch(BACKENDURL+'/a/addsongtobucket', requestOptions)
       .then(response => response.json())
       .then(
         (result) => {
@@ -195,7 +222,7 @@ export const UserTable = (props) => {
         id: parseInt(id)
        })
   };
-    fetch("http://192.168.0.73:8080/a/delete",requestOptions)
+    fetch(BACKENDURL+"/a/delete",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -230,10 +257,11 @@ export const UserTable = (props) => {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
-        user: props.user,
+        user: localStorage.getItem("user"),
+        playlistname: localStorage.getItem("playlist")
        })
   };
-    fetch("http://192.168.0.73:8080/a/merge",requestOptions)
+    fetch(BACKENDURL+"/a/merge",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -336,9 +364,11 @@ export const UserTable = (props) => {
 
   return (
     <div>
-    <p>{props.user}s Bucket ({items.length} of {amount})<EuiSpacer/><EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton></p><br/>
+    <p>{props.user}s Bucket {actualBucket} ({items.length} of {amount})<EuiSpacer/><EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton>{'  '}{nav}
+  </p><br/>
     {err}
     {loadinganimation}
+    
     <div className={"eui-yScroll bucket"}>
     <EuiBasicTable
       items={items}

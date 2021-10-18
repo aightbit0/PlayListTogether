@@ -1,6 +1,7 @@
 import { EuiComboBox,EuiFieldText,EuiSpacer,EuiButton,EuiText,EuiLink,EuiToast } from '@elastic/eui';
 
 import React, { useState, useEffect } from 'react';
+import { BACKENDURL } from '../constants';
 
 
 export const CreatePlaylist= (props) => {
@@ -17,11 +18,9 @@ const [playlistId, setPlaylistId] = useState('')
 useEffect(() => {
     if(localStorage.getItem("client")){
        setClientId(localStorage.getItem("client"))
-        
     }
     if(localStorage.getItem("secret")){
         setSecretId(localStorage.getItem("secret"))
-         
      }
     if(localStorage.getItem("UserId")){
       setUid(localStorage.getItem("UserId"))
@@ -30,15 +29,10 @@ useEffect(() => {
   },[]);
 
   useEffect(() => {
-   console.log("ekommen")
-   console.log(props.acode)
    if(props.acode){
     setCode(props.acode)
     getAuthToken(props.acode);
    }
-  
-
-
   },[props.acode]);
 
   let PrintError = () =>{
@@ -61,19 +55,18 @@ let getSongUris = () =>{
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
     body: JSON.stringify({ 
       token: localStorage.getItem("token"), 
-      user: props.user,
+      user: localStorage.getItem("user"),
+      playlistname: localStorage.getItem("playlist")
      })
 };
 
-  fetch("http://192.168.0.73:8080/a/getsonguris",requestOptions)
+  fetch(BACKENDURL+"/a/getsonguris",requestOptions)
   .then(res => res.json())
   .then(
     (result) => {
-      
       if(result){
         setUris(result.join())
       }
-      
     },
     (error) => {
      PrintError()
@@ -110,7 +103,7 @@ let createPlaylistPublic = () =>{
       >
         <p>Sucess</p>
       </EuiToast>)
-      window.location.href = "http://localhost:3000/";
+     
     },
     (error) => {
       PrintError()
@@ -118,8 +111,6 @@ let createPlaylistPublic = () =>{
     }
   )
 }
-
-
 
 let addSongsToPlaylistPublic = () =>{
   const requestOptions = {
@@ -141,6 +132,7 @@ let addSongsToPlaylistPublic = () =>{
       >
         <p>Sucess</p>
       </EuiToast>)
+      window.location.href = "http://localhist:3000";
     },
     (error) => {
       PrintError()
@@ -169,7 +161,6 @@ let getAuthToken = (hcode) =>{
         (result) => {
           console.log(result)
           setOAuth(result.access_token)
-
         },
         (error) => {
           PrintError()
@@ -194,7 +185,7 @@ let authSpotify = () =>{
     onChange={(e) => setClientId(e.target.value)}
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
-       
+     
     <EuiFieldText
     placeholder="Secret ID"
     value={secretId}
@@ -240,7 +231,7 @@ let authSpotify = () =>{
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
    <EuiButton onClick={() =>addSongsToPlaylistPublic()}  color="primary">Add Songs</EuiButton><EuiSpacer/>
-   <EuiLink href={localStorage.getItem("genPlalist")} target={"_blank"}>{playlistname}</EuiLink>
+   <EuiLink href={localStorage.getItem("genPlalist")} target={"_blank"}>{localStorage.getItem("genPlalist")}</EuiLink>
     </div>
   );
 };

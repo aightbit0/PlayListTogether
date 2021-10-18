@@ -9,6 +9,7 @@ import '@elastic/eui/dist/eui_theme_dark.css';
 import {
   EuiToast,
 } from '@elastic/eui';
+import { BACKENDURL } from './constants';
 
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
       body: JSON.stringify({ name: theuser, password: passwd })
   };
 
-  fetch('http://192.168.0.73:8080/login', requestOptions)
+  fetch(BACKENDURL+'/login', requestOptions)
       .then(response => response.json())
       .then(
         (result) => {

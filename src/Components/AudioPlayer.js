@@ -9,10 +9,7 @@ export const AudioPlayer= (props) => {
     const [toggle1On, setToggle1On] = useState(true);
     const [audioObj, setTAudioObj] = useState(null);
 
-    
-
       useEffect(() => {
-          console.log("hiiiiiie")
         setTAudioObj(new Audio(props.audiourl));
       },[props.audiourl]);
       

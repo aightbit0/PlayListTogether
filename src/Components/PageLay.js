@@ -14,6 +14,7 @@ import {
 import { PublicPlaylist } from './PublicPlaylist';
 import { GroupComp } from './GroupComp';
 import { CreatePlaylist } from './CreatePlaylist';
+import { BACKENDURL } from '../constants';
 
 export const PageLay = (props) => {
   const [bucketSelected, setBucketSelected] = useState(true);
@@ -101,7 +102,7 @@ export const PageLay = (props) => {
        })
   };
   
-    fetch("http://192.168.0.73:8080/a/logout",requestOptions)
+    fetch(BACKENDURL+"/a/logout",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -113,6 +114,7 @@ export const PageLay = (props) => {
     )
     localStorage.setItem("token",'')
     localStorage.setItem("user",'')
+    localStorage.setItem("playlist",'')
     window.location.reload();
   }
 
@@ -127,7 +129,7 @@ export const PageLay = (props) => {
          
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
-          //{ label: 'create Group', isSelected: groupSelected, onClick: () => {setNewGroup()} },
+          { label: 'create Group', isSelected: groupSelected, onClick: () => {setNewGroup()} },
           { label: 'create Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
           { label: 'Theme',  onClick: () => props.toggleTheme()},
           {label: "Log out",onClick: () => logOut()}]}

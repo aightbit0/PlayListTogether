@@ -1,22 +1,19 @@
 import { EuiComboBox,EuiFieldText,EuiSpacer,EuiButton,EuiText } from '@elastic/eui';
-
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+
 const options = [];
-let groupOptions = [];
-for (let i = 1; i < 5000; i++) {
-  groupOptions.push({ label: `option${i}` });
-  if (i % 25 === 0) {
+
+for (let i = 1; i < 10; i++) {
     options.push({
-      label: `Options ${i - (groupOptions.length - 1)} to ${i}`,
-      options: groupOptions,
+      label: `Options ${i}`,
     });
-    groupOptions = [];
-  }
 }
 
+//Todo server request to get all users and server request to check if playlist alredy exits
 export const GroupComp= (props) => {
   const [selectedOptions, setSelected] = useState([]);
+  const [playlistname, setPlaylistname] = useState('');
+  const [amount, setAmount] = useState(1);
 
   const onChange = (selectedOptions) => {
     setSelected(selectedOptions);
@@ -24,7 +21,6 @@ export const GroupComp= (props) => {
   
   return (
       <div>
-          <EuiText grow={false}><h2>Geht nicht hatte kein Bock das weiter zu machen :)</h2></EuiText>
            <EuiComboBox
       placeholder="Select one or more Users"
       options={options}
@@ -34,8 +30,16 @@ export const GroupComp= (props) => {
     <EuiSpacer/>
     <EuiFieldText
     placeholder="Name of the Playlist"
-    //value={value}
-    //onChange={(e) => onChange(e)}
+    value={playlistname}
+    onChange={(e) => setPlaylistname(e.target.value)}
+    aria-label="Use aria labels when no actual label is in use"
+  /><EuiSpacer/>
+  <EuiFieldText
+    type="number"
+    min="1"
+    placeholder="Amount of maximum Songs in Bucket"
+    value={amount}
+    onChange={(e) => setAmount(parseInt(e.target.value))}
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
    

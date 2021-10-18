@@ -8,6 +8,7 @@ import {
   EuiIcon,
 } from '@elastic/eui';
 import { Dislike } from './Dislike';
+import { BACKENDURL } from '../constants';
 
 export const PublicPlaylist = (props) => {
 
@@ -20,7 +21,18 @@ export const PublicPlaylist = (props) => {
 
   useEffect(() =>{
     if(props.user){
-      loadPlaylist();
+      if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
+        loadPlaylist();
+      }else{
+        setLoadingAnimation(<div></div>);
+        setErr( <EuiToast
+          title="Please select a Playlist"
+          color="warning"
+          iconType="alert"
+          onClick = {() =>setErr(<div></div>)}
+        ></EuiToast>)
+      }
+     
     }
   },[props.user])
 
@@ -42,10 +54,11 @@ export const PublicPlaylist = (props) => {
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
-        user: props.user,
+        user: localStorage.getItem("user"),
+        playlistname: localStorage.getItem("playlist")
        })
   };
-    fetch("http://192.168.0.73:8080/a/getplaylist",requestOptions)
+    fetch(BACKENDURL+"/a/getplaylist",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -82,7 +95,7 @@ export const PublicPlaylist = (props) => {
         id: parseInt(id)
        })
   };
-    fetch("http://192.168.0.73:8080/a/dislike",requestOptions)
+    fetch(BACKENDURL+"/a/dislike",requestOptions)
     .then(res => res.json())
     .then(
       (result) => {
@@ -189,7 +202,7 @@ export const PublicPlaylist = (props) => {
 
   return (
     <div>
-    <h2>Playlist ({items.length})</h2><br/>
+    <h2>{localStorage.getItem("playlist")} ({items.length})</h2><br/>
     {err}
     {loadinganimation}
     <div className={"eui-yScroll play"}>

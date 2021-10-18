@@ -14,6 +14,7 @@ import {
 
 } from '@elastic/eui';
 import { AudioPlayer } from './AudioPlayer';
+import { BACKENDURL } from '../constants';
 
 export const ResultShower = (props) => {
   const [trigger, setTrigger] = useState('closed');
@@ -29,7 +30,7 @@ export const ResultShower = (props) => {
 
   let getData = (stuff) =>{
     setisload(true);
-    fetch("http://192.168.0.73:8080/search?v="+stuff)
+    fetch(BACKENDURL+"/search?v="+stuff)
     .then(res => res.json())
     .then(
       (result) => {
