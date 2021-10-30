@@ -68,7 +68,6 @@ export const UserTable = (props) => {
 
   
   let loadBucket = async () =>{
-    console.log()
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },

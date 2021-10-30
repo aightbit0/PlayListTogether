@@ -39,8 +39,6 @@ export const PageLay = (props) => {
     if(code){
       setCreate()
     }
-
-   
    },[]);
 
   useEffect(() => {

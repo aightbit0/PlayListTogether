@@ -1,14 +1,16 @@
-import { EuiCollapsibleNav, EuiButton, EuiTitle, EuiSpacer, EuiLink, EuiCode } from '@elastic/eui';
+import { EuiCollapsibleNav, EuiButton, EuiTitle, EuiSpacer, EuiLink, EuiLoadingChart } from '@elastic/eui';
 import React, { useState } from 'react';
 import { BACKENDURL } from '../constants';
 export const Collapse = (props) => {
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [playlists, setplaylists] = useState(<div>no Playlists</div>)
   const [createdplaylists, setcreatedplaylists] = useState(<div>no created Playlists</div>)
+  const [loadinganimation, setLoadingAnimation] = useState(<div></div>)
 
   let loadPlaylists = () =>{
     setNavIsOpen((isOpen) => !isOpen)
     //Todo request to server to get all playlists for user
+      setLoadingAnimation(<EuiLoadingChart size="xl" />)
       const requestOptions = {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
@@ -33,6 +35,7 @@ export const Collapse = (props) => {
               console.log(result);
               createPlaylists(result)
               createCreatedPlaylists(result)
+              setLoadingAnimation(<div></div>)
             }
           }
         },
@@ -82,6 +85,7 @@ export const Collapse = (props) => {
         onClose={() => setNavIsOpen(false)}
       >
         <div style={{ padding: 16 }}>
+          {loadinganimation}
           <EuiTitle>
             <h2>Your Playlists</h2>
           </EuiTitle>
