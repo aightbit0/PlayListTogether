@@ -47,8 +47,7 @@ export const PublicPlaylist = (props) => {
   }
 
   let loadPlaylist = async () =>{
-    //console.log(localStorage.getItem("token"));
-    //console.log(props.user);
+    
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
@@ -67,7 +66,6 @@ export const PublicPlaylist = (props) => {
           localStorage.setItem("user", '');
           window.location.reload();
         }else{
-          //console.log(result);
           if(result){
             setItems(result);
           }

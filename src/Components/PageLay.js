@@ -105,15 +105,20 @@ export const PageLay = (props) => {
     .then(
       (result) => {
         console.log(result)
+        localStorage.setItem("token",'')
+        localStorage.setItem("user",'')
+        localStorage.setItem("playlist",'')
+        window.location.reload();
       },
       (error) => {
-       console.log("failed ")
+       console.log("failed")
+       localStorage.setItem("token",'')
+        localStorage.setItem("user",'')
+        localStorage.setItem("playlist",'')
+        window.location.reload();
       }
     )
-    localStorage.setItem("token",'')
-    localStorage.setItem("user",'')
-    localStorage.setItem("playlist",'')
-    window.location.reload();
+   
   }
 
   let title = "Hallo "+ props.user
@@ -127,8 +132,8 @@ export const PageLay = (props) => {
          
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
-          { label: 'create Group', isSelected: groupSelected, onClick: () => {setNewGroup()} },
-          { label: 'create Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
+          { label: 'create Playlist', isSelected: groupSelected, onClick: () => {setNewGroup()} },
+          { label: 'deploy Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
           { label: 'Theme',  onClick: () => props.toggleTheme()},
           {label: "Log out",onClick: () => logOut()}]}
         />

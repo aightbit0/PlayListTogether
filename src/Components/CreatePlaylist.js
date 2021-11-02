@@ -13,7 +13,7 @@ const [uris, setUris] = useState('')
 const [err, setErr] = useState(<div></div>);
 
 const [uid, setUid] = useState('')
-const [playlistname, setPlaylistname] = useState('')
+const [playlistname, setPlaylistname] = useState(localStorage.getItem("playlist"))
 const [playlistId, setPlaylistId] = useState('')
 useEffect(() => {
     if(localStorage.getItem("client")){
