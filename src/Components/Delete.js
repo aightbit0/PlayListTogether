@@ -10,12 +10,9 @@ import {
 
 export const Delete= (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  
-
   const closeModal = () => setIsModalVisible(false);
   
   useEffect(() =>{
-    //console.log("im delete");
     setIsModalVisible(true);
   },[props.toggle])
 

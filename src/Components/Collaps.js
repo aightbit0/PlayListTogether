@@ -9,16 +9,15 @@ export const Collapse = (props) => {
 
   let loadPlaylists = () =>{
     setNavIsOpen((isOpen) => !isOpen)
-    //Todo request to server to get all playlists for user
-      setLoadingAnimation(<EuiLoadingChart size="xl" />)
-      const requestOptions = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
-        body: JSON.stringify({ 
-          token: localStorage.getItem("token"), 
-          user: localStorage.getItem("user"),
-          playlist: localStorage.getItem("playlist")
-         })
+    setLoadingAnimation(<EuiLoadingChart size="xl" />)
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: localStorage.getItem("user"),
+        playlist: localStorage.getItem("playlist")
+        })
     };
       fetch(BACKENDURL+"/a/getplaylists",requestOptions)
       .then(res => res.json())
@@ -29,10 +28,7 @@ export const Collapse = (props) => {
             localStorage.setItem("user", '');
             window.location.reload();
           }else{
-            //console.log(result);
             if(result){
-              //setItems(result);
-              console.log(result);
               createPlaylists(result)
               createCreatedPlaylists(result)
               setLoadingAnimation(<div></div>)
@@ -40,7 +36,6 @@ export const Collapse = (props) => {
           }
         },
         (error) => {
-         console.log("failed fetching amount")
          setplaylists(<div>ERROR</div>)
          setcreatedplaylists(<div>ERROR</div>)
         }

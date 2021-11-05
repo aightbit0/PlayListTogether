@@ -5,7 +5,6 @@ import {
   EuiFieldSearch,
   EuiFlexGroup,
   EuiFlexItem,
-  EuiButton,
 } from '@elastic/eui';
 
 export const Search = (props) => {

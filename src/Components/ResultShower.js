@@ -4,13 +4,10 @@ import {
   EuiAccordion,
   EuiPanel,
   EuiButtonGroup,
-  EuiSpacer,
   EuiToast,
   EuiFlexItem,
-  EuiFlexGroup,
   EuiImage,
   EuiHealth,
-  EuiButtonIcon,
 
 } from '@elastic/eui';
 import { AudioPlayer } from './AudioPlayer';
@@ -22,7 +19,6 @@ export const ResultShower = (props) => {
   const [isload, setisload] = useState(false);
   const [err, setErr] = useState(<div></div>);
   
-
   const onToggle = (isOpen) => {
     const newState = isOpen ? 'open' : 'closed';
     setTrigger(newState); 
@@ -36,11 +32,9 @@ export const ResultShower = (props) => {
       (result) => {
         setErr(<div></div>)
         setisload(false);
-        console.log(result);
         renderThisShit(JSON.stringify(result))
       },
       (error) => {
-       console.log("fail")
        setisload(false);
        setTrigger("closed")
        setErr( <EuiToast
@@ -62,7 +56,6 @@ export const ResultShower = (props) => {
 
   let renderThisShit = (res) =>{
     let objekt = JSON.parse(res);
-    //console.log(objekt.length)
     let stuff = [];
     objekt.map((i)=>{
       stuff.push(
@@ -114,7 +107,6 @@ export const ResultShower = (props) => {
    <EuiButtonGroup
       legend="This is a basic group"    
     />
- 
     <EuiAccordion
       arrowDisplay="none"
       id={"resmaker"}
@@ -129,7 +121,6 @@ export const ResultShower = (props) => {
         {val}
       </EuiPanel>
     </EuiAccordion>
-       
       </div>
   );
 };

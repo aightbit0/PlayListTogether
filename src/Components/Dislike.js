@@ -9,8 +9,6 @@ import {
 
 export const Dislike= (props) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDestroyModalVisible, setIsDestroyModalVisible] = useState(false);
-
   const closeModal = () => setIsModalVisible(false);
   
   useEffect(() =>{

@@ -2,7 +2,6 @@ import { EuiComboBox,EuiFieldText,EuiSpacer,EuiButton,EuiToast } from '@elastic/
 import React, { useState, useEffect } from 'react';
 import { BACKENDURL } from '../constants';
 
-//Todo server request to get all users and server request to check if playlist alredy exits
 export const GroupComp= (props) => {
   const [selectedOptions, setSelected] = useState([]);
   const [playlistname, setPlaylistname] = useState('');
@@ -17,7 +16,6 @@ useEffect(() => {
   const onChange = (selectedOptions) => {
     setSelected(selectedOptions);
   };
-
 
   let getUsers = async () =>{
     const requestOptions = {
@@ -117,7 +115,6 @@ useEffect(() => {
       setSelected(arr);
       createPlaylist();
     }else{
-      console.log("fail")
       setErr( <EuiToast
         title="Input not valid"
         color="danger"

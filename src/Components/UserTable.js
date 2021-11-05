@@ -38,7 +38,6 @@ export const UserTable = (props) => {
           onClick = {() =>setErr(<div></div>)}
         ></EuiToast>)
       }
-     
     }
   },[props.user])
 
@@ -244,7 +243,6 @@ export const UserTable = (props) => {
         }
       },
       (error) => {
-       console.log("failed fetching delete")
        PrintError();
       }
     )
@@ -282,7 +280,6 @@ export const UserTable = (props) => {
         }
       },
       (error) => {
-       console.log("failed fetching delete")
        PrintError();
       }
     )
@@ -300,7 +297,6 @@ export const UserTable = (props) => {
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
       src={name}
-      
     />
       ),
     },

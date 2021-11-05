@@ -18,7 +18,6 @@ export const PublicPlaylist = (props) => {
   const [err, setErr] = useState(<div></div>);
   const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl"  />);
 
-
   useEffect(() =>{
     if(props.user){
       if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
@@ -32,10 +31,8 @@ export const PublicPlaylist = (props) => {
           onClick = {() =>setErr(<div></div>)}
         ></EuiToast>)
       }
-     
     }
   },[props.user])
-
 
   let PrintError = () =>{
     setErr( <EuiToast
@@ -83,7 +80,6 @@ export const PublicPlaylist = (props) => {
   }
 
   let DislikeItem = (id) =>{
-    //console.log(id)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' , 'Authorization': 'Bearer '+localStorage.getItem("token")},
@@ -97,7 +93,6 @@ export const PublicPlaylist = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        //console.log(result);
         if(result == "failes"){
           localStorage.setItem("token", '');
           localStorage.setItem("user", '');
@@ -116,7 +111,6 @@ export const PublicPlaylist = (props) => {
         }
       },
       (error) => {
-       console.log("failed fetching delete")
        PrintError();
       }
     )
@@ -212,8 +206,7 @@ export const PublicPlaylist = (props) => {
       cellProps={getCellProps}
     />
     </div>
-    {modalrender}
-    
+    {modalrender}  
     </div>
   );
 };

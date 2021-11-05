@@ -34,7 +34,6 @@ export const PageLay = (props) => {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const code = urlParams.get('code')
-    console.log(code);
     setCode(code)
     if(code){
       setCreate()
@@ -104,7 +103,6 @@ export const PageLay = (props) => {
     .then(res => res.json())
     .then(
       (result) => {
-        console.log(result)
         localStorage.setItem("token",'')
         localStorage.setItem("user",'')
         localStorage.setItem("playlist",'')
@@ -120,8 +118,7 @@ export const PageLay = (props) => {
     )
    
   }
-
-  let title = "Hallo "+ props.user
+  
   return(
     <EuiPage paddingSize="none">
       <EuiPageBody>

@@ -12,6 +12,15 @@ export const AudioPlayer= (props) => {
       useEffect(() => {
         setTAudioObj(new Audio(props.audiourl));
       },[props.audiourl]);
+
+      let handleAudio = () =>{
+        if(toggle1On){
+          audioObj.play();
+        }else{
+          audioObj.pause();
+        }
+        setToggle1On((isOn) => !isOn);
+      }
       
   return (
     <div>
@@ -20,18 +29,7 @@ export const AudioPlayer= (props) => {
         title={toggle1On ? 'Play' : 'Pause'}
         aria-label={toggle1On ? 'Play' : 'Pause'}
         iconType={toggle1On ? 'play' : 'pause'}
-        onClick={() => {
-            console.log(props.audiourl)
-            
-            if(toggle1On){
-                console.log("play");
-                audioObj.play();
-            }else{
-                console.log("pause")
-                audioObj.pause();
-            }
-            setToggle1On((isOn) => !isOn);
-          }}
+        onClick={() => handleAudio()}
       />
     </div>
   );
