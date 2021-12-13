@@ -20,7 +20,15 @@ export const Collapse = (props) => {
         })
     };
       fetch(BACKENDURL+"/a/getplaylists",requestOptions)
-      .then(res => res.json())
+      .then((res) => {
+        if(res.status == 401){
+          localStorage.setItem("token", '');
+          localStorage.setItem("user", '');
+          window.location.reload();
+          return
+        }  
+        return res.json()
+      })
       .then(
         (result) => {
           if(result == "no acess"){

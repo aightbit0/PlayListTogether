@@ -78,7 +78,15 @@ export const UserTable = (props) => {
   };
   
     fetch(BACKENDURL+"/a/getbucket",requestOptions)
-    .then(res => res.json())
+    .then((res) => {
+      if(res.status == 401){
+        localStorage.setItem("token", '');
+        localStorage.setItem("user", '');
+        window.location.reload();
+        return
+      }  
+      return res.json()
+    })
     .then(
       (result) => {
         if(result == "no acess"){
@@ -105,7 +113,6 @@ export const UserTable = (props) => {
             PrintError();
             }
           )
-          
         }
       },
       (error) => {
@@ -164,7 +171,15 @@ export const UserTable = (props) => {
   };
 
   fetch(BACKENDURL+'/a/addsongtobucket', requestOptions)
-      .then(response => response.json())
+  .then((res) => {
+    if(res.status == 401){
+      localStorage.setItem("token", '');
+      localStorage.setItem("user", '');
+      window.location.reload();
+      return
+    }  
+    return res.json()
+  })
       .then(
         (result) => {
           if(result == "exists"){
@@ -221,7 +236,15 @@ export const UserTable = (props) => {
        })
   };
     fetch(BACKENDURL+"/a/delete",requestOptions)
-    .then(res => res.json())
+    .then((res) => {
+      if(res.status == 401){
+        localStorage.setItem("token", '');
+        localStorage.setItem("user", '');
+        window.location.reload();
+        return
+      }  
+      return res.json()
+    })
     .then(
       (result) => {
          if(result == "sucess"){
@@ -259,7 +282,15 @@ export const UserTable = (props) => {
        })
   };
     fetch(BACKENDURL+"/a/merge",requestOptions)
-    .then(res => res.json())
+    .then((res) => {
+      if(res.status == 401){
+        localStorage.setItem("token", '');
+        localStorage.setItem("user", '');
+        window.location.reload();
+        return
+      }  
+      return res.json()
+    })
     .then(
       (result) => {
         if(result == "sucess"){

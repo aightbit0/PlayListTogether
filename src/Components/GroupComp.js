@@ -28,7 +28,15 @@ useEffect(() => {
   };
   
     fetch(BACKENDURL+"/a/getusers",requestOptions)
-    .then(res => res.json())
+    .then((res) => {
+      if(res.status == 401){
+        localStorage.setItem("token", '');
+        localStorage.setItem("user", '');
+        window.location.reload();
+        return
+      }  
+      return res.json()
+    })
     .then(
       (result) => {
         let optionsTemp = [];
@@ -67,7 +75,15 @@ useEffect(() => {
   };
   
     fetch(BACKENDURL+"/a/createplaylist",requestOptions)
-    .then(res => res.json())
+    .then((res) => {
+      if(res.status == 401){
+        localStorage.setItem("token", '');
+        localStorage.setItem("user", '');
+        window.location.reload();
+        return
+      }  
+      return res.json()
+    })
     .then(
       (result) => {
         if(result == 1){

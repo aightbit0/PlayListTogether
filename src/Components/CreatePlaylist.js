@@ -2,6 +2,7 @@ import { EuiComboBox,EuiFieldText,EuiSpacer,EuiButton,EuiText,EuiLink,EuiToast }
 
 import React, { useState, useEffect } from 'react';
 import { BACKENDURL } from '../constants';
+import { RELOADURL } from '../constants';
 
 
 export const CreatePlaylist= (props) => {
@@ -49,6 +50,46 @@ let setUidAndLocal = (va) =>{
   setUid(va)
 }
 
+let saveCreatedPlaylist = (url, plname) =>{
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
+    body: JSON.stringify({ 
+      token: localStorage.getItem("token"), 
+      user: localStorage.getItem("user"),
+      playlisturl: url,
+      playlistname: plname
+     })
+};
+
+  fetch(BACKENDURL+"/a/saveplaylist",requestOptions)
+  .then((res) => {
+    if(res.status == 401){
+      localStorage.setItem("token", '');
+      localStorage.setItem("user", '');
+      window.location.reload();
+      return
+    }  
+    return res.json()
+  })
+  .then(
+    (result) => {
+      setErr( <EuiToast
+        title="Saved Playlist"
+        color="success"
+        iconType="check"
+        onClick = {() =>setErr(<div></div>)}
+      >
+        <p>Sucess</p>
+      </EuiToast>)
+    },
+    (error) => {
+     PrintError()
+     console.log("failed fetching")
+    }
+  )
+}
+
 let getSongUris = () =>{
   const requestOptions = {
     method: 'POST',
@@ -61,7 +102,15 @@ let getSongUris = () =>{
 };
 
   fetch(BACKENDURL+"/a/getsonguris",requestOptions)
-  .then(res => res.json())
+  .then((res) => {
+    if(res.status == 401){
+      localStorage.setItem("token", '');
+      localStorage.setItem("user", '');
+      window.location.reload();
+      return
+    }  
+    return res.json()
+  })
   .then(
     (result) => {
       if(result){
@@ -91,8 +140,6 @@ let createPlaylistPublic = () =>{
   .then(res => res.json())
   .then(
     (result) => {
-
-      console.log(result)
       setPlaylistId(result.id)
       localStorage.setItem("genPlalist",result.external_urls.spotify)
       setErr( <EuiToast
@@ -103,11 +150,10 @@ let createPlaylistPublic = () =>{
       >
         <p>Sucess</p>
       </EuiToast>)
-     
+      saveCreatedPlaylist(result.external_urls.spotify, result.name)
     },
     (error) => {
-      PrintError()
-     console.log("failed fetching")
+      alert("FAIL playlist not saved")
     }
   )
 }
@@ -123,7 +169,6 @@ let addSongsToPlaylistPublic = () =>{
   .then(res => res.json())
   .then(
     (result) => {
-      console.log(result)
       setErr( <EuiToast
         title="Songs added to  Playlist"
         color="success"
@@ -132,11 +177,11 @@ let addSongsToPlaylistPublic = () =>{
       >
         <p>Sucess</p>
       </EuiToast>)
-      window.location.href = "http://localhist:3000";
+      window.location.href = RELOADURL;
     },
     (error) => {
       PrintError()
-     console.log("failed fetching")
+     //console.log("failed fetching")
     }
   )
 }
@@ -145,7 +190,7 @@ let addSongsToPlaylistPublic = () =>{
 let getAuthToken = (hcode) =>{
     let bodys = "grant_type=authorization_code";
     bodys += "&code=" + hcode; 
-    bodys += "&redirect_uri=" + encodeURI('http://localhost:3000/');
+    bodys += "&redirect_uri=" + encodeURI(RELOADURL);
     bodys += "&client_id=" + localStorage.getItem("client");
     bodys += "&client_secret=" + localStorage.getItem("secret");
 
@@ -159,13 +204,10 @@ let getAuthToken = (hcode) =>{
       .then(res => res.json())
       .then(
         (result) => {
-          console.log(result)
           setOAuth(result.access_token)
         },
         (error) => {
           PrintError()
-         console.log("failed fetching")
-      
         }
       )
 }
@@ -173,7 +215,7 @@ let getAuthToken = (hcode) =>{
 let authSpotify = () =>{
     localStorage.setItem("secret",secretId)
     localStorage.setItem("client",clientId)
-    let url = "https://accounts.spotify.com/authorize?client_id="+clientId+"&response_type=code&redirect_uri=http://localhost:3000/&scope=user-read-private user-read-email playlist-modify-public playlist-modify-private"
+    let url = "https://accounts.spotify.com/authorize?client_id="+clientId+"&response_type=code&redirect_uri="+RELOADURL+"/&scope=user-read-private user-read-email playlist-modify-public playlist-modify-private"
     window.location.href = url;
 }
   return (
