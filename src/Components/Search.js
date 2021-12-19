@@ -14,7 +14,7 @@ export const Search = (props) => {
     }
 
     let addedtoBucket = (item) =>{
-      setSearchValue('')
+      //setSearchValue('')
       props.reload(item)
     }
     

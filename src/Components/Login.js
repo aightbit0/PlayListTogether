@@ -51,6 +51,11 @@ export const Login =(props) => {
             <EuiButton onClick={()=> props.check(userName,password)}>Log in</EuiButton>
             </EuiFlexItem>
         </Fragment>
+        <EuiSpacer/>
+        <p>Welcome to PlayListTogether !</p>
+      
+        <p>Software made by <a href="https://github.com/aightbit0">aightbit0 aka Svenson</a></p>
+            <p>Powered by <a href="https://we-make-your.software">we-make-your.software</a></p>
         </div>
     );
     

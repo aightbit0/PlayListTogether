@@ -50,7 +50,6 @@ export const ResultShower = (props) => {
   }
 
   let addToBucket = (obj) =>{
-    console.log(obj)
     props.setBack(obj);
   }
 

@@ -164,14 +164,6 @@ export const PublicPlaylist = (props) => {
       field: 'dislike',
       name: 'Dislikes',
 
-    },
-    {
-      field: 'd',
-      name: 'dislike',
-      truncateText: true,
-      render: (item) => (
-        <EuiIcon size="m" type="starMinusEmpty" />
-      ),
     }
   ];
 
@@ -191,7 +183,7 @@ export const PublicPlaylist = (props) => {
       'data-test-subj': `cell-${id}-${field}`,
       textOnly: true,
       onClick: () => {
-        if(field == "d"){
+        if(field == "dislike"){
           if(toggler){
             setToggler(false)
         }else{
