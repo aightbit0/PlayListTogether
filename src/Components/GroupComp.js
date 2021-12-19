@@ -10,6 +10,7 @@ export const GroupComp= (props) => {
   const [err, setErr] = useState(<div></div>);
 
 useEffect(() => {
+  localStorage.setItem("actual_page","create")
   getUsers()
  },[]);
 

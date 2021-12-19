@@ -20,6 +20,7 @@ export const PublicPlaylist = (props) => {
 
   useEffect(() =>{
     if(props.user){
+      localStorage.setItem("actual_page","public")
       if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
         loadPlaylist();
       }else{

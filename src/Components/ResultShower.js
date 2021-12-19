@@ -18,11 +18,21 @@ export const ResultShower = (props) => {
   const [val, setVal] = useState(<div></div>);
   const [isload, setisload] = useState(false);
   const [err, setErr] = useState(<div></div>);
+  const [resetAudio, setResetAudio] = useState(false);
+  const [holdOld, setHoldOld] = useState("");
   
   const onToggle = (isOpen) => {
     const newState = isOpen ? 'open' : 'closed';
     setTrigger(newState); 
   };
+
+  let hd = "";
+  
+  useEffect(() => {
+    if(holdOld != ""){
+      renderThisShit(holdOld)
+    }
+  },[resetAudio]);
 
   let getData = (stuff) =>{
     setisload(true);
@@ -32,7 +42,9 @@ export const ResultShower = (props) => {
       (result) => {
         setErr(<div></div>)
         setisload(false);
+        hd = JSON.stringify(result);
         renderThisShit(JSON.stringify(result))
+        
       },
       (error) => {
        setisload(false);
@@ -53,6 +65,13 @@ export const ResultShower = (props) => {
     props.setBack(obj);
   }
 
+  let triggerResetFunc = () =>{
+    if(hd != ""){
+      setHoldOld(hd)
+    }
+    setResetAudio(!resetAudio)
+  }
+
   let renderThisShit = (res) =>{
     let objekt = JSON.parse(res);
     let stuff = [];
@@ -67,7 +86,7 @@ export const ResultShower = (props) => {
       alt="Accessible image alt goes here"
       src={i.album.images[0].url}
     />
-    <AudioPlayer end={trigger} audiourl={i.preview_url}/>
+    <AudioPlayer reset={resetAudio} triggerReset={() => triggerResetFunc()} audiourl={i.preview_url}/>
       <EuiFlexItem grow={false}>
       <EuiHealth textSize="m" color="success">
         {i.name}
@@ -97,6 +116,7 @@ export const ResultShower = (props) => {
         setErr(<div></div>)
         setTrigger('closed');
         setisload(false);
+        triggerResetFunc();
     }
   },[props.search]);
 

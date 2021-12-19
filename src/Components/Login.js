@@ -9,7 +9,9 @@ import {
   EuiFieldPassword,
   EuiButton,
   EuiTitle,
+  EuiText,
 } from '@elastic/eui';
+
 
 export const Login =(props) => {
 
@@ -56,7 +58,19 @@ export const Login =(props) => {
       
         <p>Software made by <a href="https://github.com/aightbit0">aightbit0 aka Svenson</a></p>
             <p>Powered by <a href="https://we-make-your.software">we-make-your.software</a></p>
+            <EuiSpacer/>
+            <EuiTitle size="l">
+        <h1>ACTUAL-FIXES</h1>
+        </EuiTitle>
+        <EuiText>
+        <ul>
+        <li>fixed audio problem</li>
+        <li>NEW: adding multiple songs to Bucket without closing search results</li>
+        <li>NEW: stay on page after reload</li>
+      </ul>
+        </EuiText>
         </div>
+        
     );
     
 }

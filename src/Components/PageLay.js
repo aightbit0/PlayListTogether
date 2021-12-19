@@ -38,6 +38,28 @@ export const PageLay = (props) => {
     if(code){
       setCreate()
     }
+    else{
+      switch (localStorage.getItem("actual_page")) {
+        case "public":
+          setPlaylist();
+          // Anweisungen werden ausgeführt,
+          // falls expression mit value1 übereinstimmt
+          break;
+        case "bucket":
+          setBucket();
+          // Anweisungen werden ausgeführt,
+          // falls expression mit value2 übereinstimmt
+          break;
+        case "create":
+          setNewGroup();
+          // Anweisungen werden ausgeführt,
+          // falls expression mit value2 übereinstimmt
+          break;
+        default:
+         localStorage.setItem("actual_page","bucket")
+          break;
+      }
+    }
    },[]);
 
   useEffect(() => {
@@ -114,6 +136,7 @@ export const PageLay = (props) => {
         localStorage.setItem("token",'')
         localStorage.setItem("user",'')
         localStorage.setItem("playlist",'')
+        localStorage.setItem("actual_page",'')
         window.location.reload();
       },
       (error) => {
@@ -121,6 +144,7 @@ export const PageLay = (props) => {
        localStorage.setItem("token",'')
         localStorage.setItem("user",'')
         localStorage.setItem("playlist",'')
+        localStorage.setItem("actual_page",'')
         window.location.reload();
       }
     )

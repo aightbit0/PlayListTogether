@@ -27,6 +27,7 @@ export const UserTable = (props) => {
 
   useEffect(() =>{
     if(props.user){
+      localStorage.setItem("actual_page","bucket")
       if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
         loadBucket();
       }else{
