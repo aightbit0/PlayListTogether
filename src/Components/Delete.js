@@ -19,7 +19,7 @@ export const Delete= (props) => {
   let modal;
 
   let confirmHandler = () =>{
-    props.del(props.show)
+    props.del(props.ident)
     closeModal();
   }
 

@@ -18,7 +18,7 @@ export const Dislike= (props) => {
   let modal;
 
   let confirmHandler = () =>{
-    props.dis(props.show)
+    props.dis(props.ident)
     closeModal();
   }
 

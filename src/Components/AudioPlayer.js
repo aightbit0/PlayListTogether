@@ -16,7 +16,6 @@ export const AudioPlayer= (props) => {
 
       useEffect(() => {
         if(audioObj){
-          console.log(toggle1On)
           if(!toggle1On){
             if(!isPlaying){
              setIsPlaying(true)

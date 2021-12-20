@@ -34,6 +34,11 @@ export const ResultShower = (props) => {
     }
   },[resetAudio]);
 
+
+  useEffect(() => {
+    setResetAudio(!resetAudio)
+  },[props.forceStop]);
+
   let getData = (stuff) =>{
     setisload(true);
     fetch(BACKENDURL+"/search?v="+stuff)

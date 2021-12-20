@@ -9,6 +9,7 @@ import {
 
 export const Search = (props) => {
     let [searchValue, setSearchValue] = useState('');
+    let [stop, setStop] = useState(false);
     let requestHandler = (e) =>{
         setSearchValue(e.target.value)
     }
@@ -28,10 +29,11 @@ export const Search = (props) => {
               aria-label="An example of search with fullWidth"
               value = {searchValue}
               onChange={(e) => requestHandler(e)}
+              onClick={()=>setStop(!stop)}
             />
           </EuiFlexItem>
         </EuiFlexGroup>
-        <ResultShower user={props.user} search={searchValue} setBack={(item) => addedtoBucket(item)}/>
+        <ResultShower user={props.user} forceStop={stop} search={searchValue} setBack={(item) => addedtoBucket(item)}/>
       </Fragment>
       );
  

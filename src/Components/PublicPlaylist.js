@@ -190,7 +190,7 @@ export const PublicPlaylist = (props) => {
         }else{
           setToggler(true)
         }
-        setModalrenderer(<Dislike dis={(id) => DislikeItem(id)} toggle={toggler} show={item.id}/>)
+        setModalrenderer(<Dislike dis={(id) => DislikeItem(id)} ident={item.id} toggle={toggler} show={item.songname}/>)
         }
       },
     };

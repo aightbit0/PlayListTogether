@@ -381,7 +381,7 @@ export const UserTable = (props) => {
         }else{
           setToggler(true)
         }
-          setModalrenderer(<Delete del={(id) => DeleteItem(id)} toggle={toggler} show={item.id}/>)
+          setModalrenderer(<Delete del={(id) => DeleteItem(id)} ident={item.id} toggle={toggler} show={item.songname}/>)
         }
       },
       'data-test-subj': `cell-${id}-${field}`,
