@@ -65,8 +65,7 @@ export const Login =(props) => {
         <EuiText>
         <ul>
         <li>fixed audio problem</li>
-        <li>NEW: adding multiple songs to Bucket without closing search results</li>
-        <li>NEW: stay on page after reload</li>
+        <li>NEW Design</li>
       </ul>
         </EuiText>
         </div>

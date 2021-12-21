@@ -131,7 +131,7 @@ export const PublicPlaylist = (props) => {
   const columns = [
     {
       field: 'picture',
-      name: 'Picture',
+      
       'data-test-subj': 'firstNameCell',
       render: (name) => (
         <EuiImage
@@ -145,26 +145,18 @@ export const PublicPlaylist = (props) => {
     },
     {
       field: 'songname',
-      name: 'Title',
-      truncateText: true,
+    
+      truncateText: false,
+      width:'50%',
       render: (name, item) => (
+        <div>
         <EuiLink href={item.url} target="_blank">
-          {name}
+          {item.artist} {name}
         </EuiLink>
+        <p>{item.name}</p>
+        <p>{item.dislike}</p>
+      </div>
       ),
-    },
-    {
-      field: 'artist',
-      name: 'Artist',
-    },
-    {
-      field: 'name',
-      name: 'User',
-    },
-    {
-      field: 'dislike',
-      name: 'Dislikes',
-
     }
   ];
 
@@ -184,7 +176,7 @@ export const PublicPlaylist = (props) => {
       'data-test-subj': `cell-${id}-${field}`,
       textOnly: true,
       onClick: () => {
-        if(field == "dislike"){
+        if(field == "picture"){
           if(toggler){
             setToggler(false)
         }else{

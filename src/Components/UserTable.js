@@ -320,7 +320,6 @@ export const UserTable = (props) => {
   const columns = [
     {
       field: 'picture',
-      name: 'Picture',
       'data-test-subj': 'firstNameCell',
       render: (name) => (
         <EuiImage
@@ -334,28 +333,17 @@ export const UserTable = (props) => {
     },
     {
       field: 'songname',
-      name: 'Title',
-      truncateText: true,
+      truncateText: false,
+      width: '50%',
       render: (name, item) => (
-        <EuiLink href={item.url} target="_blank">
-          {name}
-        </EuiLink>
-      ),
-    },
-    {
-      field: 'artist',
-      name: 'Artist',
-    },
-    {
-      field: 'name',
-      name: 'User',
-    },
-    {
-      field: 'd',
-      name: 'delete',
-      truncateText: true,
-      render: (item) => (
-        <EuiIcon size="m" type="trash" />
+        <div>
+          <EuiLink href={item.url} target="_blank">
+            {item.artist} {name}
+          </EuiLink>
+          <p>{item.name}</p>
+        </div>
+       
+        
       ),
     }
   ];
@@ -375,7 +363,7 @@ export const UserTable = (props) => {
     return {
       className: 'customCellClass',
       onClick: () => {
-        if(field == "d"){
+        if(field == "picture"){
           if(toggler){
             setToggler(false)
         }else{
