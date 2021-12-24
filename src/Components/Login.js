@@ -64,8 +64,10 @@ export const Login =(props) => {
         </EuiTitle>
         <EuiText>
         <ul>
-        <li>fixed audio problem</li>
-        <li>NEW Design</li>
+        <li>performance imrovements</li>
+        <li>auto merge to public playlist</li>
+        <li>dislikes are highlighted red</li>
+        <li>design improvements</li>
       </ul>
         </EuiText>
         </div>

@@ -165,7 +165,7 @@ export const UserTable = (props) => {
         uri: obj.uri, 
         songname: obj.name, 
         artist: obj.album.artists[0].name, 
-        picture:obj.album.images[0].url,
+        picture:obj.album.images[1].url,
         url: obj.external_urls.spotify,
         playlistname: localStorage.getItem("playlist")
        })
@@ -203,8 +203,7 @@ export const UserTable = (props) => {
             >
               <p>Sucess</p>
             </EuiToast>)
-            clear();
-           loadBucket();
+            merge()
           }
         
           else{
@@ -334,13 +333,13 @@ export const UserTable = (props) => {
     {
       field: 'songname',
       truncateText: false,
-      width: '50%',
+      width: '70%',
       render: (name, item) => (
         <div>
           <EuiLink href={item.url} target="_blank">
             {item.artist} {name}
           </EuiLink>
-          <p>{item.name}</p>
+          <p className={item.dislike > 0?"red":""}>{item.name} ({item.dislike})</p>
         </div>
        
         
@@ -379,7 +378,7 @@ export const UserTable = (props) => {
 
   return (
     <div>
-    <p>{props.user}s Bucket {actualBucket} ({items.length} of {amount})<EuiSpacer/><EuiButton onClick={() => merge()} isDisabled={bds} color="primary">Merge</EuiButton>{'  '}{nav}
+    <p>{props.user}s Bucket {actualBucket} ({items.length} of {amount}){' '}{nav}
   </p><br/>
     {err}
     {loadinganimation}

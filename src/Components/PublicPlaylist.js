@@ -127,7 +127,7 @@ export const PublicPlaylist = (props) => {
       }
     )
   }
-
+  let clas = "";
   const columns = [
     {
       field: 'picture',
@@ -147,14 +147,14 @@ export const PublicPlaylist = (props) => {
       field: 'songname',
     
       truncateText: false,
-      width:'50%',
+      width:'70%',
       render: (name, item) => (
         <div>
         <EuiLink href={item.url} target="_blank">
           {item.artist} {name}
         </EuiLink>
-        <p>{item.name}</p>
-        <p>{item.dislike}</p>
+        <p className={item.dislike > 0?"red":""}>{item.name} ({item.dislike})</p>
+        
       </div>
       ),
     }

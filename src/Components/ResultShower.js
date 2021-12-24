@@ -89,7 +89,7 @@ export const ResultShower = (props) => {
       hasShadow
       allowFullScreen = {false}
       alt="Accessible image alt goes here"
-      src={i.album.images[0].url}
+      src={i.album.images[1].url}
     />
     <AudioPlayer reset={resetAudio} triggerReset={() => triggerResetFunc()} audiourl={i.preview_url}/>
       <EuiFlexItem grow={false}>

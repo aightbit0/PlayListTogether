@@ -1,4 +1,4 @@
-import { EuiCollapsibleNav, EuiButton, EuiTitle, EuiSpacer, EuiLink, EuiLoadingChart } from '@elastic/eui';
+import { EuiCollapsibleNav, EuiButton, EuiTitle, EuiSpacer, EuiLink, EuiLoadingChart, EuiButtonIcon } from '@elastic/eui';
 import React, { useState } from 'react';
 import { BACKENDURL } from '../constants';
 export const Collapse = (props) => {
@@ -81,9 +81,7 @@ export const Collapse = (props) => {
         isOpen={navIsOpen}
         size={300}
         button={
-          <EuiButton onClick={() => loadPlaylists()}>
-            Select Playlist
-          </EuiButton>
+          <EuiButtonIcon iconType="boxesHorizontal" onClick={() => loadPlaylists()} aria-label="Next" />
         }
         onClose={() => setNavIsOpen(false)}
       >

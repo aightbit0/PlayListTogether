@@ -37,6 +37,10 @@
   height: 40px !important;
 }
 
+.red{
+  color: red !important;
+}
+
 .results{
   display: flex;
   flex-direction: row;
@@ -51,4 +55,9 @@
   width: 100%;
   margin-top: 5px;
   margin-bottom: 10px;
+}
+
+
+.euiTable.euiTable--responsive .euiTableRowCell{
+  min-width: 30% !important;
 }
