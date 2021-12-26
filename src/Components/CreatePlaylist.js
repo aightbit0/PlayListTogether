@@ -11,6 +11,7 @@ const [secretId, setSecretId] = useState('')
 const [code, setCode] = useState('')
 const [oauth, setOAuth] = useState('')
 const [uris, setUris] = useState('')
+const [divideduris, setDividedUris] = useState([])
 const [err, setErr] = useState(<div></div>);
 
 const [uid, setUid] = useState('')
@@ -114,6 +115,28 @@ let getSongUris = () =>{
   .then(
     (result) => {
       if(result){
+        let zw = [];
+        console.log("insg: ",result.length)
+        let insg = result.length
+        let rest = insg % 100;
+        let rounds = (insg-rest)/100;
+        
+        if(result.length > 100){
+          for (var i = 1; i <= rounds+1; i++) {
+            if(i <= rounds){
+              console.log(result.slice((i-1)*100,i*100).length)
+              zw.push(result.slice((i-1)*100,i*100).join())
+            }else{
+              console.log(result.slice((i-1)*100).length)
+              zw.push(result.slice((i-1)*100).join())
+            }
+          }
+        }else{
+          zw.push(result.join())
+        }
+
+        console.log(zw)
+        setDividedUris(zw);
         setUris(result.join())
       }
     },
@@ -159,13 +182,21 @@ let createPlaylistPublic = () =>{
 }
 
 let addSongsToPlaylistPublic = () =>{
+  for (var i = 0; i < divideduris.length; i++) {
+    addSongBucketToPlaylist(divideduris[i]);
+  }
+
+  window.location.href = RELOADURL;
+}
+
+let addSongBucketToPlaylist = (uriBucket) =>{
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+oauth},
     body: ''
 };
 
-  fetch("https://api.spotify.com/v1/playlists/"+playlistId+"/tracks?uris="+uris+"",requestOptions)
+  fetch("https://api.spotify.com/v1/playlists/"+playlistId+"/tracks?uris="+uriBucket+"",requestOptions)
   .then(res => res.json())
   .then(
     (result) => {
@@ -177,22 +208,20 @@ let addSongsToPlaylistPublic = () =>{
       >
         <p>Sucess</p>
       </EuiToast>)
-      window.location.href = RELOADURL;
+      //window.location.href = RELOADURL;
     },
     (error) => {
       PrintError()
      //console.log("failed fetching")
     }
   )
-}
+} 
 
 
 let getAuthToken = (hcode) =>{
     let bodys = "grant_type=authorization_code";
     bodys += "&code=" + hcode; 
-    bodys += "&redirect_uri=" + encodeURI(RELOADURL);
-    bodys += "&client_id=" + localStorage.getItem("client");
-    bodys += "&client_secret=" + localStorage.getItem("secret");
+    bodys += "&redirect_uri=" + RELOADURL+"/";
 
     const requestOptions = {
         method: 'POST',
@@ -204,6 +233,7 @@ let getAuthToken = (hcode) =>{
       .then(res => res.json())
       .then(
         (result) => {
+          console.log(result)
           setOAuth(result.access_token)
         },
         (error) => {

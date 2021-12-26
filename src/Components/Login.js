@@ -63,12 +63,7 @@ export const Login =(props) => {
         <h1>ACTUAL-FIXES</h1>
         </EuiTitle>
         <EuiText>
-        <ul>
-        <li>performance imrovements</li>
-        <li>auto merge to public playlist</li>
-        <li>dislikes are highlighted red</li>
-        <li>design improvements</li>
-      </ul>
+    
         </EuiText>
         </div>
         

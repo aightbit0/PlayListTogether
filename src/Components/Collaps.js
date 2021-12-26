@@ -67,7 +67,7 @@ export const Collapse = (props) => {
     let allCreatedPlaylists = [];
     res.map((i) =>{
       if(i.playlisturl != ""){
-        allCreatedPlaylists.push(<EuiLink href={i.playlisturl} target={"_blank"}>{i.playlistname}</EuiLink>)
+        allCreatedPlaylists.push(<div><EuiLink href={i.playlisturl} target={"_blank"}>{i.playlistname}</EuiLink><EuiSpacer/></div>)
       }
     })
     if(allCreatedPlaylists.length == 0){
