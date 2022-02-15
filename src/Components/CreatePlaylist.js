@@ -27,6 +27,10 @@ useEffect(() => {
     if(localStorage.getItem("UserId")){
       setUid(localStorage.getItem("UserId"))
     }
+
+    if(localStorage.getItem("playlistID")){
+      setPlaylistId(localStorage.getItem("playlistID"))
+    }
      getSongUris()
   },[]);
 
@@ -116,26 +120,20 @@ let getSongUris = () =>{
     (result) => {
       if(result){
         let zw = [];
-        console.log("insg: ",result.length)
         let insg = result.length
         let rest = insg % 100;
         let rounds = (insg-rest)/100;
-        
         if(result.length > 100){
           for (var i = 1; i <= rounds+1; i++) {
             if(i <= rounds){
-              console.log(result.slice((i-1)*100,i*100).length)
               zw.push(result.slice((i-1)*100,i*100).join())
             }else{
-              console.log(result.slice((i-1)*100).length)
               zw.push(result.slice((i-1)*100).join())
             }
           }
         }else{
           zw.push(result.join())
         }
-
-        console.log(zw)
         setDividedUris(zw);
         setUris(result.join())
       }
@@ -185,11 +183,9 @@ let addSongsToPlaylistPublic = () =>{
   for (var i = 0; i < divideduris.length; i++) {
     addSongBucketToPlaylist(divideduris[i]);
   }
-
-  window.location.href = RELOADURL;
 }
 
-let addSongBucketToPlaylist = (uriBucket) =>{
+let  addSongBucketToPlaylist = (uriBucket) =>{
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+oauth},
@@ -204,18 +200,38 @@ let addSongBucketToPlaylist = (uriBucket) =>{
         title="Songs added to  Playlist"
         color="success"
         iconType="check"
-        onClick = {() =>setErr(<div></div>)}
+        onClick = {() =>window.location.href = RELOADURL}
       >
         <p>Sucess</p>
       </EuiToast>)
-      //window.location.href = RELOADURL;
+      return true
     },
     (error) => {
       PrintError()
-     //console.log("failed fetching")
     }
   )
-} 
+}
+
+let  deleteSongBucketToPlaylist = (uriBucket) =>{
+  const requestOptions = {
+    method: 'DELETE',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+oauth},
+    body: JSON.stringify({ 
+      tracks: uriBucket,
+     })
+};
+
+  fetch("https://api.spotify.com/v1/playlists/"+playlistId+"/tracks",requestOptions)
+  .then(res => res.json())
+  .then(
+    (result) => {
+     console.log(result)
+    },
+    (error) => {
+      PrintError()
+    }
+  )
+}
 
 
 let getAuthToken = (hcode) =>{
@@ -248,6 +264,29 @@ let authSpotify = () =>{
     let url = "https://accounts.spotify.com/authorize?client_id="+clientId+"&response_type=code&redirect_uri="+RELOADURL+"/&scope=user-read-private user-read-email playlist-modify-public playlist-modify-private"
     window.location.href = url;
 }
+
+let checkDifference = () =>{
+
+  const requestOptions = {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+oauth},
+};
+
+  fetch("https://api.spotify.com/v1/playlists/"+playlistId+"/tracks?fields=items(added_by.id%2Ctrack(uri))%2Ctotal&limit=100&offset=0",requestOptions)
+  .then(res => res.json())
+  .then(
+    (result) => {
+      console.log(result)
+    },
+    (error) => {
+      PrintError()
+    }
+  )
+
+  //let test = [{"uri":'spotify:track:0SSPCV9A5xoYrdXxatp0xG'}];
+  //deleteSongBucketToPlaylist(test)
+}
+
   return (
       <div>
         {err}
@@ -269,11 +308,13 @@ let authSpotify = () =>{
     placeholder="code"
     value={code}
     aria-label="Use aria labels when no actual label is in use"
+    disabled={true}
   /><EuiSpacer/>
    
     <EuiButton onClick = {() => authSpotify()} color="primary">Authenticate</EuiButton>
     <EuiSpacer/>
     <EuiFieldText
+    disabled={true}
     placeholder="OAuth"
     value={oauth}
     aria-label="Use aria labels when no actual label is in use"
@@ -303,6 +344,7 @@ let authSpotify = () =>{
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
    <EuiButton onClick={() =>addSongsToPlaylistPublic()}  color="primary">Add Songs</EuiButton><EuiSpacer/>
+   <EuiButton onClick={() =>checkDifference()}  color="primary">Update Songs</EuiButton><EuiSpacer/>
    <EuiLink href={localStorage.getItem("genPlalist")} target={"_blank"}>{localStorage.getItem("genPlalist")}</EuiLink>
     </div>
   );
