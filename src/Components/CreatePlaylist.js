@@ -276,7 +276,27 @@ let checkDifference = () =>{
   .then(res => res.json())
   .then(
     (result) => {
-      console.log(result)
+      var localPlaylist = new Set();
+      var onlinePlaylist = new Set();
+      //console.log(result)
+      //console.log(uris.split(","))
+      let localToArray =  uris.split(",")
+   
+      for (var i = 0; i <localToArray.length; i++) {
+        localPlaylist.add(localToArray[i])
+      }
+
+      console.log(result.items[0].track.uri)
+      for (var p = 0; p <result.items.length; p++) {
+        onlinePlaylist.add(result.items[p].track.uri)
+      }
+
+
+
+      console.log(localPlaylist)
+
+      console.log(onlinePlaylist)
+
     },
     (error) => {
       PrintError()

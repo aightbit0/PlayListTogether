@@ -97,6 +97,15 @@ export const UserTable = (props) => {
         }else{
           if(result){
             setItems(result);
+            /*
+            console.log(result)
+            if(result.length > 0){
+              let zw = result[0].url.split("/")
+              if(localStorage.getItem("playlistID") != zw){
+                localStorage.setItem("playlistID",zw[4])
+              }
+            }
+            */
           }else{
             setItems([]);
           }
