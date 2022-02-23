@@ -22,7 +22,7 @@ export const UserTable = (props) => {
   const [amount, setAmount] = useState(0);
   const [loaded, setLoaded] = useState(false);
   const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl" />)
-  const [nav, setNav] = useState(<Collapse rerender = {(name) => rerender(name)}></Collapse>)
+  const [nav, setNav] = useState(<Collapse rerender = {(name,plid) => rerender(name,plid)}></Collapse>)
   const [actualBucket, setActualBucket] = useState(localStorage.getItem("playlist"))
 
   useEffect(() =>{
@@ -42,9 +42,15 @@ export const UserTable = (props) => {
     }
   },[props.user])
 
-  let rerender = (playlistname) =>{
+  let rerender = (playlistname,playlistid) =>{
     localStorage.setItem("playlist",playlistname)
-
+    if(playlistid != ""){
+      let zw =playlistid.split("/")
+      localStorage.setItem("playlistID",zw[4])
+    }else{
+      localStorage.setItem("playlistID","")
+    }
+  
     if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
       setActualBucket(localStorage.getItem("playlist"))
       loadBucket();

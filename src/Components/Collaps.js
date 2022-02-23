@@ -53,9 +53,10 @@ export const Collapse = (props) => {
   }
 
   let createPlaylists = (res) =>{
+    console.log(res)
     let allPlaylists = [];
     res.map((i) =>{
-      allPlaylists.push(<div><EuiButton onClick={() => props.rerender(i.playlistname)}>
+      allPlaylists.push(<div><EuiButton onClick={() => props.rerender(i.playlistname,i.playlisturl)}>
       {i.playlistname}
     </EuiButton><EuiSpacer /></div>)
     })

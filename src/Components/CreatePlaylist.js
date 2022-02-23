@@ -226,6 +226,14 @@ let  deleteSongBucketToPlaylist = (uriBucket) =>{
   .then(
     (result) => {
      console.log(result)
+     setErr( <EuiToast
+      title="Songs added to  Playlist"
+      color="success"
+      iconType="check"
+      onClick = {() =>window.location.href = RELOADURL}
+    >
+      <p>Sucess</p>
+    </EuiToast>)
     },
     (error) => {
       PrintError()
@@ -265,6 +273,14 @@ let authSpotify = () =>{
     window.location.href = url;
 }
 
+function difference(setA, setB) {
+  var _difference = new Set(setA);
+  for (var elem of setB) {
+      _difference.delete(elem);
+  }
+  return _difference;
+}
+
 let checkDifference = () =>{
 
   const requestOptions = {
@@ -278,33 +294,52 @@ let checkDifference = () =>{
     (result) => {
       var localPlaylist = new Set();
       var onlinePlaylist = new Set();
-      //console.log(result)
-      //console.log(uris.split(","))
+  
       let localToArray =  uris.split(",")
    
       for (var i = 0; i <localToArray.length; i++) {
         localPlaylist.add(localToArray[i])
       }
 
-      console.log(result.items[0].track.uri)
       for (var p = 0; p <result.items.length; p++) {
         onlinePlaylist.add(result.items[p].track.uri)
       }
-
-
 
       console.log(localPlaylist)
 
       console.log(onlinePlaylist)
 
+      let toAdd = difference(localPlaylist,onlinePlaylist)
+      let toDelete = difference(onlinePlaylist,localPlaylist)
+      if(toAdd.size !=0){
+        if(toAdd.size <=100){
+          console.log(toAdd)
+          addSongBucketToPlaylist([...toAdd])
+        }else{
+          
+        }
+      }
+
+      if(toDelete.size !=0){
+        if(toDelete.size <=100){
+          let makearr = [...toDelete];
+          console.log(makearr)
+          console.log(makearr[0])
+          let makeObjToDelete = [{}]
+          for (var x = 0; x <makearr.length; x++) {
+           makeObjToDelete[x] = {"uri":makearr[x]}
+          }
+          console.log(makeObjToDelete)
+          deleteSongBucketToPlaylist(makeObjToDelete)
+        }else{
+          
+        }
+      }
     },
     (error) => {
       PrintError()
     }
   )
-
-  //let test = [{"uri":'spotify:track:0SSPCV9A5xoYrdXxatp0xG'}];
-  //deleteSongBucketToPlaylist(test)
 }
 
   return (
