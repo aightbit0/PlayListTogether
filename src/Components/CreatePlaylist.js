@@ -189,11 +189,7 @@ let createPlaylistPublic = () =>{
   )
 }
 
-let addSongsToPlaylistPublic = () =>{
-  for (var i = 0; i < divideduris.length; i++) {
-    addSongBucketToPlaylist(divideduris[i]);
-  }
-}
+
 
 let  addSongBucketToPlaylist = (uriBucket) =>{
   const requestOptions = {
@@ -294,7 +290,6 @@ function difference(setA, setB) {
 let  checkDifference = async() =>{
   let promises = [];
   let test = await getOnlinePlaylistSongs(0)
-  console.log(test)
   promises.push(test);
 
   let offset = 0;
@@ -308,8 +303,96 @@ let  checkDifference = async() =>{
   }
 
   console.log(promises)
-  
 
+  var localPlaylist = new Set();
+  var onlinePlaylist = new Set();
+
+  let localToArray =  uris.split(",")
+
+  for (var i = 0; i <localToArray.length; i++) {
+    localPlaylist.add(localToArray[i])
+  }
+
+  for (var d = 0; d <promises.length; d++) {
+    for (var p = 0; p <promises[d].items.length; p++) {
+      onlinePlaylist.add(promises[d].items[p].track.uri)
+    }
+  }
+
+  
+  let toAdd = difference(localPlaylist,onlinePlaylist)
+  let toDelete = difference(onlinePlaylist,localPlaylist)
+
+  //console.log(toAdd)
+  //console.log(toDelete)
+
+  let text = "Add "+toAdd.size+" Songs and Delete "+toDelete.size+" Songs";
+  alert(text)
+
+  let toAddArray = [...toAdd];
+  //console.log(toAddArray)
+
+  let toDeleteArray = [...toDelete];
+
+  //console.log(toDeleteArray)
+
+  //ADD SONGS TO PLAYLIST LIVE
+  if(toAdd.size > 100){
+    let zw = [];
+    let rounds = calculateRounds(toAddArray.length)
+    for (var i = 1; i <= rounds; i++) {
+      if(i <= rounds){
+        zw.push(toAddArray.slice((i-1)*100,i*100).join())
+      }else{
+        zw.push(toAddArray.slice((i-1)*100).join())
+      }
+    }
+    console.log(zw)
+    for (var i = 0; i < zw.length; i++) {
+      addSongBucketToPlaylist(zw[i]);
+    }
+
+  }else{
+    addSongBucketToPlaylist([...toAdd])
+  }
+
+  //DELETE SONGS TO PLAYLIST LIVE
+  if(toDelete.size > 100){
+    let zw = [];
+    let rounds = calculateRounds(toDeleteArray.length)
+
+   
+    for (var i = 1; i <= rounds; i++) {
+      if(i <= rounds){
+        let tempArr = toDeleteArray.slice((i-1)*100,i*100);
+        let makeObjToDelete = [{}]
+        for (var x = 0; x <tempArr.length; x++) {
+          makeObjToDelete[x] = {"uri":tempArr[x]}
+         }
+        zw.push(makeObjToDelete)
+      }else{
+        let tempArr = toDeleteArray.slice((i-1)*100);
+        let makeObjToDelete = [{}]
+        for (var x = 0; x <tempArr.length; x++) {
+          makeObjToDelete[x] = {"uri":tempArr[x]}
+         }
+        zw.push(makeObjToDelete)
+      }
+    }
+
+    //console.log(zw)
+    for (var i = 0; i < zw.length; i++) {
+      deleteSongBucketToPlaylist(zw[i])
+    }
+    
+  }else{
+    let makeObjToDelete = [{}]
+    for (var x = 0; x <toDeleteArray.length; x++) {
+     makeObjToDelete[x] = {"uri":toDeleteArray[x]}
+    }
+    //console.log(makeObjToDelete)
+    deleteSongBucketToPlaylist(makeObjToDelete)
+  }
 }
 
 
@@ -325,58 +408,8 @@ let getOnlinePlaylistSongs =  (offset) =>{
   .then(res => res.json())
   .then(
     (result) => {
-      //console.log(result)
-
-      return result
-      /*
-      var localPlaylist = new Set();
-      var onlinePlaylist = new Set();
   
-      let localToArray =  uris.split(",")
-   
-      for (var i = 0; i <localToArray.length; i++) {
-        localPlaylist.add(localToArray[i])
-      }
-
-      for (var p = 0; p <result.items.length; p++) {
-        onlinePlaylist.add(result.items[p].track.uri)
-      }
-
-      console.log(localPlaylist)
-
-      console.log(onlinePlaylist)
-
-      let toAdd = difference(localPlaylist,onlinePlaylist)
-      let toDelete = difference(onlinePlaylist,localPlaylist)
-      if(toAdd.size !=0){
-        if(toAdd.size <=100){
-          console.log(toAdd)
-          addSongBucketToPlaylist([...toAdd])
-        }else{
-          
-          
-        }
-      }
-
-      if(toDelete.size !=0){
-        if(toDelete.size <=100){
-          let makearr = [...toDelete];
-          console.log(makearr)
-          console.log(makearr[0])
-          let makeObjToDelete = [{}]
-          for (var x = 0; x <makearr.length; x++) {
-           makeObjToDelete[x] = {"uri":makearr[x]}
-          }
-          console.log(makeObjToDelete)
-          deleteSongBucketToPlaylist(makeObjToDelete)
-        }else{
-          
-        }
-      }
-    },
-    (error) => {
-      PrintError()
-      */
+      return result
     }
     
   )
@@ -438,7 +471,7 @@ let getOnlinePlaylistSongs =  (offset) =>{
     onChange={(e) => setPlaylistId(e.target.value)}
     aria-label="Use aria labels when no actual label is in use"
   /><EuiSpacer/>
-   <EuiButton onClick={() =>addSongsToPlaylistPublic()}  color="primary">Add Songs</EuiButton><EuiSpacer/>
+  
    <EuiButton onClick={() =>checkDifference()}  color="primary">Update Songs</EuiButton><EuiSpacer/>
    <EuiLink href={localStorage.getItem("genPlalist")} target={"_blank"}>{localStorage.getItem("genPlalist")}</EuiLink>
     </div>
