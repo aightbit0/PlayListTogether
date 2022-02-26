@@ -12,6 +12,7 @@ const [code, setCode] = useState('')
 const [oauth, setOAuth] = useState('')
 const [uris, setUris] = useState('')
 const [divideduris, setDividedUris] = useState([])
+const [onlineUris, setOnlineUris] = useState([])
 const [err, setErr] = useState(<div></div>);
 
 const [uid, setUid] = useState('')
@@ -95,6 +96,17 @@ let saveCreatedPlaylist = (url, plname) =>{
   )
 }
 
+let calculateRounds = (amount) =>{
+  let insg = amount
+  let rest = insg % 100;
+  let rounds = (insg-rest)/100;
+  if(rest != 0){
+      rounds = rounds+1;
+  }
+
+  return rounds
+}
+
 let getSongUris = () =>{
   const requestOptions = {
     method: 'POST',
@@ -120,20 +132,18 @@ let getSongUris = () =>{
     (result) => {
       if(result){
         let zw = [];
-        let insg = result.length
-        let rest = insg % 100;
-        let rounds = (insg-rest)/100;
-        if(result.length > 100){
-          for (var i = 1; i <= rounds+1; i++) {
-            if(i <= rounds){
-              zw.push(result.slice((i-1)*100,i*100).join())
-            }else{
-              zw.push(result.slice((i-1)*100).join())
-            }
+      if(result.length > 100){
+        let rounds = calculateRounds(result.length)
+        for (var i = 1; i <= rounds; i++) {
+          if(i <= rounds){
+            zw.push(result.slice((i-1)*100,i*100).join())
+          }else{
+            zw.push(result.slice((i-1)*100).join())
           }
-        }else{
-          zw.push(result.join())
         }
+      }else{
+        zw.push(result.join())
+      }
         setDividedUris(zw);
         setUris(result.join())
       }
@@ -281,17 +291,44 @@ function difference(setA, setB) {
   return _difference;
 }
 
-let checkDifference = () =>{
+let  checkDifference = async() =>{
+  let promises = [];
+  let test = await getOnlinePlaylistSongs(0)
+  console.log(test)
+  promises.push(test);
 
+  let offset = 0;
+  let total = test.total;
+  let rounds = calculateRounds(total)
+  console.log(rounds)
+  
+  for (let i = 1; i <= rounds-1; i++) {
+    offset+=100;
+    promises.push(await getOnlinePlaylistSongs(offset));
+  }
+
+  console.log(promises)
+  
+
+}
+
+
+
+let getOnlinePlaylistSongs =  (offset) =>{
   const requestOptions = {
     method: 'GET',
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+oauth},
 };
 
-  fetch("https://api.spotify.com/v1/playlists/"+playlistId+"/tracks?fields=items(added_by.id%2Ctrack(uri))%2Ctotal&limit=100&offset=0",requestOptions)
+//if get playlist also buckets
+  return fetch("https://api.spotify.com/v1/playlists/"+playlistId+"/tracks?fields=items(added_by.id%2Ctrack(uri))%2Ctotal&limit=100&offset="+offset+"",requestOptions)
   .then(res => res.json())
   .then(
     (result) => {
+      //console.log(result)
+
+      return result
+      /*
       var localPlaylist = new Set();
       var onlinePlaylist = new Set();
   
@@ -317,6 +354,7 @@ let checkDifference = () =>{
           addSongBucketToPlaylist([...toAdd])
         }else{
           
+          
         }
       }
 
@@ -338,7 +376,9 @@ let checkDifference = () =>{
     },
     (error) => {
       PrintError()
+      */
     }
+    
   )
 }
 
