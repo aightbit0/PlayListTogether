@@ -127,7 +127,7 @@ export const PublicPlaylist = (props) => {
       }
     )
   }
-  let clas = "";
+
   const columns = [
     {
       field: 'picture',
@@ -138,8 +138,8 @@ export const PublicPlaylist = (props) => {
       size="60px"
       hasShadow
       allowFullScreen = {false}
-      alt="Accessible image alt goes here"
-      src={name}
+      alt="X"
+      src={localStorage.getItem("performance") =="true"?"":name}
     />
       ),
     },

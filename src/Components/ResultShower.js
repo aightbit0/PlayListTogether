@@ -88,8 +88,8 @@ export const ResultShower = (props) => {
       size="60px"
       hasShadow
       allowFullScreen = {false}
-      alt="Accessible image alt goes here"
-      src={i.album.images[1].url}
+      alt="X"
+      src={localStorage.getItem("performance") =="true"?"":i.album.images[1].url}
     />
     <AudioPlayer reset={resetAudio} triggerReset={() => triggerResetFunc()} audiourl={i.preview_url}/>
       <EuiFlexItem grow={false}>

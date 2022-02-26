@@ -60,10 +60,10 @@ export const Login =(props) => {
             <p>Powered by <a href="https://we-make-your.software">we-make-your.software</a></p>
             <EuiSpacer/>
             <EuiTitle size="l">
-        <h1>ACTUAL-FIXES</h1>
+        <h1>NEWS</h1>
         </EuiTitle>
         <EuiText>
-    
+            Performance Mode now available !
         </EuiText>
         </div>
         

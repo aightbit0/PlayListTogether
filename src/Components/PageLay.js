@@ -163,7 +163,7 @@ export const PageLay = (props) => {
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
           { label: 'create Playlist', isSelected: groupSelected, onClick: () => {setNewGroup()} },
           { label: 'deploy Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
-          { label: 'Theme',  onClick: () => props.toggleTheme()},
+          //{ label: 'Theme',  onClick: () => props.toggleTheme()},
           {label: "Log out",onClick: () => logOut()}]}
         />
         <EuiPageContent borderRadius="none" hasShadow={false} paddingSize="none">

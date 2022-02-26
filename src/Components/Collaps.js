@@ -1,11 +1,34 @@
-import { EuiCollapsibleNav, EuiButton, EuiTitle, EuiSpacer, EuiLink, EuiLoadingChart, EuiButtonIcon } from '@elastic/eui';
-import React, { useState } from 'react';
+import { EuiCollapsibleNav, EuiButton, EuiTitle, EuiSpacer, EuiLink, EuiLoadingChart, EuiButtonIcon, EuiSwitch } from '@elastic/eui';
+import React, { useState, useEffect } from 'react';
 import { BACKENDURL } from '../constants';
 export const Collapse = (props) => {
   const [navIsOpen, setNavIsOpen] = useState(false);
   const [playlists, setplaylists] = useState(<div>no Playlists</div>)
   const [createdplaylists, setcreatedplaylists] = useState(<div>no created Playlists</div>)
   const [loadinganimation, setLoadingAnimation] = useState(<div></div>)
+  const [disabled, setDisabled] = useState(false)
+
+  useEffect(() =>{
+    if(localStorage.getItem("performance")){
+      if(localStorage.getItem("performance") =="true"){
+        setDisabled(true)
+      }
+    }
+  },[])
+
+  let setPerformance = (target) =>{
+    if(localStorage.getItem("performance")){
+      if(target === true){
+        localStorage.setItem("performance","true")
+      }else{
+        localStorage.setItem("performance","false")
+      }
+      setDisabled(target)
+    }else{
+      localStorage.setItem("performance","true")
+    }
+  }
+  
 
   let loadPlaylists = () =>{
     setNavIsOpen((isOpen) => !isOpen)
@@ -53,7 +76,6 @@ export const Collapse = (props) => {
   }
 
   let createPlaylists = (res) =>{
-    console.log(res)
     let allPlaylists = [];
     res.map((i) =>{
       allPlaylists.push(<div><EuiButton onClick={() => props.rerender(i.playlistname,i.playlisturl)}>
@@ -100,6 +122,11 @@ export const Collapse = (props) => {
           <EuiSpacer />
           {createdplaylists}
         </div>
+        <EuiSwitch
+        label="Performance Mode"
+        checked={disabled}
+        onChange={(e) => setPerformance(e.target.checked)}
+      />
       </EuiCollapsibleNav>
   );
 };
