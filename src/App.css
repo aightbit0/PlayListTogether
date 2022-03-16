@@ -3,12 +3,21 @@
   max-height: 400px;
 }
 
+.buttonwrapper{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: end;
+}
+
 .bucket{
-  max-height: 61vh;
+  max-height: 67vh;
+  position: relative;
 }
 
 .play{
-  max-height: 67vh;
+  max-height: 77vh;
 }
 
 .img{

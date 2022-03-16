@@ -63,7 +63,7 @@ export const Login =(props) => {
         <h1>NEWS</h1>
         </EuiTitle>
         <EuiText>
-            Performance Mode now available !
+            Design improvements
         </EuiText>
         </div>
         

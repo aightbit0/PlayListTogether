@@ -385,7 +385,11 @@ export const UserTable = (props) => {
 
   return (
     <div>
-    <p>{props.user}s Bucket {actualBucket} ({items.length} of {amount}){' '}{nav}
+      <div className='buttonwrapper'>
+        {nav}
+      </div>
+      
+    <p>{props.user}s Bucket {actualBucket} ({items.length} of {amount}){' '}
   </p><br/>
     {err}
     {loadinganimation}
