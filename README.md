@@ -1,4 +1,4 @@
-best spotify app ever
+A application who can create a playlist for a group of Users.
 
 # Getting Started with Create React App
 
