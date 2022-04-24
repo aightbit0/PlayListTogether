@@ -47,35 +47,39 @@ function App() {
   };
 
   fetch(BACKENDURL+'/login', requestOptions)
-      .then(response => response.json())
-      .then(
-        (result) => {
-          if(result != "acess denied"){
-            localStorage.setItem('token', result);
-            localStorage.setItem('user', theuser);
-            setCont(<PageLay toggleTheme={() => themeChanger()} user={theuser}/>);
-          }else{
-            setErr(<EuiToast
-              title="Not Authorised"
-              color="danger"
-              iconType="alert"
-              onClick = {() =>setErr(<div></div>)}
-            >
-              <p>Not Authorised Access (Du kommst hier net rein)</p>
-            </EuiToast>)
-          }
-        },
-        (error) => {
-          setErr(<EuiToast
-            title="No Connection"
-            color="danger"
-            iconType="alert"
-            onClick = {() =>setErr(<div></div>)}
-          >
-            <p>No Connection</p>
-          </EuiToast>)
-        }
-      )
+
+  .then((res) => {
+    if(res.status == 401){
+      setErr(<EuiToast
+        title="Not Authorised"
+        color="danger"
+        iconType="alert"
+        onClick = {() =>setErr(<div></div>)}
+      >
+        <p>Not Authorised Access (Du kommst hier net rein)</p>
+      </EuiToast>)
+      return
+    }
+    return res.json()
+
+  })
+  .then(
+    (result) => {
+      if(result){
+        localStorage.setItem('token', result);
+        localStorage.setItem('user', theuser);
+        setCont(<PageLay toggleTheme={() => themeChanger()} user={theuser}/>);
+      }
+    },(error) => {
+      setErr(<EuiToast
+        title="No Connection"
+        color="danger"
+        iconType="alert"
+        onClick = {() =>setErr(<div></div>)}
+      >
+        <p>No Connection</p>
+      </EuiToast>)
+    })
   }
   
   return (

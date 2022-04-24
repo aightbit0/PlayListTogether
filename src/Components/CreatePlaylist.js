@@ -68,7 +68,7 @@ let saveCreatedPlaylist = (url, plname) =>{
      })
 };
 
-  fetch(BACKENDURL+"/a/saveplaylist",requestOptions)
+  fetch(BACKENDURL+"/playlist/saveplaylist",requestOptions)
   .then((res) => {
     if(res.status == 401){
       localStorage.setItem("token", '');
@@ -118,7 +118,7 @@ let getSongUris = () =>{
      })
 };
 
-  fetch(BACKENDURL+"/a/getsonguris",requestOptions)
+  fetch(BACKENDURL+"/playlist/getsonguris",requestOptions)
   .then((res) => {
     if(res.status == 401){
       localStorage.setItem("token", '');

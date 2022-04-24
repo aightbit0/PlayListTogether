@@ -84,7 +84,7 @@ export const UserTable = (props) => {
        })
   };
   
-    fetch(BACKENDURL+"/a/getbucket",requestOptions)
+    fetch(BACKENDURL+"/playlist/getbucket",requestOptions)
     .then((res) => {
       if(res.status == 401){
         localStorage.setItem("token", '');
@@ -102,24 +102,13 @@ export const UserTable = (props) => {
           window.location.reload();
         }else{
           if(result){
-            setItems(result);
+            setItems(result.data);
+            setAmount(parseInt(result.amount));
+            setLoaded(true)
           }else{
             setItems([]);
           }
-         
           setLoadingAnimation(<div></div>);
-          fetch(BACKENDURL+"/a/getamount",requestOptions)
-          .then(res => res.json())
-          .then(
-            (result) => {
-              setAmount(parseInt(result));
-              setLoaded(true)
-            },
-            (error) => {
-            console.log("failed fetching amount")
-            PrintError();
-            }
-          )
         }
       },
       (error) => {
@@ -130,7 +119,6 @@ export const UserTable = (props) => {
        PrintError();
       }
     )
-   
     return
   }
 
@@ -177,7 +165,7 @@ export const UserTable = (props) => {
        })
   };
 
-  fetch(BACKENDURL+'/a/addsongtobucket', requestOptions)
+  fetch(BACKENDURL+'/playlist/addsongtobucket', requestOptions)
   .then((res) => {
     if(res.status == 401){
       localStorage.setItem("token", '');
@@ -209,7 +197,8 @@ export const UserTable = (props) => {
             >
               <p>Sucess</p>
             </EuiToast>)
-            merge()
+            clear();
+            loadBucket();
           }
         
           else{
@@ -241,80 +230,33 @@ export const UserTable = (props) => {
         id: parseInt(id)
        })
   };
-    fetch(BACKENDURL+"/a/delete",requestOptions)
+    fetch(BACKENDURL+"/playlist/delete",requestOptions)
     .then((res) => {
       if(res.status == 401){
         localStorage.setItem("token", '');
         localStorage.setItem("user", '');
         window.location.reload();
         return
-      }  
-      return res.json()
-    })
-    .then(
-      (result) => {
-         if(result == "sucess"){
-          setLoaded(true)
-          setErr( <EuiToast
-            title="Deleted Song"
-            color="success"
-            iconType="check"
-            onClick = {() =>setErr(<div></div>)}
-          >
-            <p>Sucess</p>
-          </EuiToast>)
-          clear();
-          loadBucket();
-        }else{
-          localStorage.setItem("token", '');
-          localStorage.setItem("user", '');
-          window.location.reload();
-        }
-      },
-      (error) => {
-       PrintError();
       }
-    )
-  }
-
-  let merge = () =>{
-    const requestOptions = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
-      body: JSON.stringify({ 
-        token: localStorage.getItem("token"), 
-        user: localStorage.getItem("user"),
-        playlistname: localStorage.getItem("playlist")
-       })
-  };
-    fetch(BACKENDURL+"/a/merge",requestOptions)
-    .then((res) => {
-      if(res.status == 401){
-        localStorage.setItem("token", '');
-        localStorage.setItem("user", '');
-        window.location.reload();
-        return
-      }  
-      return res.json()
+      
+      if(res.status == 200){
+        setLoaded(true)
+        setErr( <EuiToast
+          title="Deleted Song"
+          color="success"
+          iconType="check"
+          onClick = {() =>setErr(<div></div>)}
+        >
+          <p>Sucess</p>
+        </EuiToast>)
+        clear();
+        loadBucket();
+        return res.json()
+      }
     })
     .then(
       (result) => {
-        if(result == "sucess"){
-          setErr( <EuiToast
-            title="Merged to Playlist"
-            color="success"
-            iconType="check"
-            onClick = {() =>setErr(<div></div>)}
-          >
-            <p>Sucess</p>
-          </EuiToast>)
-          clear();
-          loadBucket();
-        }else{
-          localStorage.setItem("token", '');
-          localStorage.setItem("user", '');
-          window.location.reload();
-        }
+        console.log(result)
       },
       (error) => {
        PrintError();
@@ -346,7 +288,7 @@ export const UserTable = (props) => {
           <EuiLink href={item.url} target="_blank">
             {item.artist} {name}
           </EuiLink>
-          <p className={item.dislike > 0?"red":""}>{item.name} ({item.dislike})</p>
+          <p className={item.dislike > 0?"red":""}>{item.name} ({item.dislike}{item.disliker==""?null:": "+item.disliker})</p>
         </div>
        
         

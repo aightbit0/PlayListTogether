@@ -28,7 +28,7 @@ useEffect(() => {
        })
   };
   
-    fetch(BACKENDURL+"/a/getusers",requestOptions)
+    fetch(BACKENDURL+"/playlist/getusers",requestOptions)
     .then((res) => {
       if(res.status == 401){
         localStorage.setItem("token", '');
@@ -75,7 +75,7 @@ useEffect(() => {
        })
   };
   
-    fetch(BACKENDURL+"/a/createplaylist",requestOptions)
+    fetch(BACKENDURL+"/playlist/createplaylist",requestOptions)
     .then((res) => {
       if(res.status == 401){
         localStorage.setItem("token", '');
@@ -87,14 +87,14 @@ useEffect(() => {
     })
     .then(
       (result) => {
-        if(result == 1){
+        if(result == "success"){
           setErr( <EuiToast
             title="Playlist created"
             color="success"
             iconType="check"
             onClick = {() =>setErr(<div></div>)}
           ></EuiToast>)
-        }else if(result == 2){
+        }else if(result == "exists"){
           setErr( <EuiToast
             title="Error Playlist alredy exists"
             color="danger"

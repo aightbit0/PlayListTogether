@@ -42,7 +42,7 @@ export const Collapse = (props) => {
         playlist: localStorage.getItem("playlist")
         })
     };
-      fetch(BACKENDURL+"/a/getplaylists",requestOptions)
+      fetch(BACKENDURL+"/playlist/getplaylists",requestOptions)
       .then((res) => {
         if(res.status == 401){
           localStorage.setItem("token", '');

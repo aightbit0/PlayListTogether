@@ -121,7 +121,7 @@ export const PageLay = (props) => {
        })
   };
   
-    fetch(BACKENDURL+"/a/logout",requestOptions)
+    fetch(BACKENDURL+"/playlist/logout",requestOptions)
     .then((res) => {
       if(res.status == 401){
         localStorage.setItem("token", '');
@@ -162,7 +162,7 @@ export const PageLay = (props) => {
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
           { label: 'create Playlist', isSelected: groupSelected, onClick: () => {setNewGroup()} },
-          { label: 'deploy Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
+          { label: 'deploy/edit Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
           //{ label: 'Theme',  onClick: () => props.toggleTheme()},
           {label: "Log out",onClick: () => logOut()}]}
         />

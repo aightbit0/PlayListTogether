@@ -63,7 +63,9 @@ export const Login =(props) => {
         <h1>NEWS</h1>
         </EuiTitle>
         <EuiText>
-            Design improvements
+          Dislike Songs now working !
+          <br></br>
+          Performance improvements
         </EuiText>
         </div>
         

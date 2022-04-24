@@ -55,7 +55,7 @@ export const PublicPlaylist = (props) => {
         playlistname: localStorage.getItem("playlist")
        })
   };
-    fetch(BACKENDURL+"/a/getplaylist",requestOptions)
+    fetch(BACKENDURL+"/playlist/getplaylist",requestOptions)
     .then((res) => {
       if(res.status == 401){
         localStorage.setItem("token", '');
@@ -90,10 +90,11 @@ export const PublicPlaylist = (props) => {
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: props.user,
-        id: parseInt(id)
+        id: parseInt(id),
+        playlistname: localStorage.getItem("playlist")
        })
   };
-    fetch(BACKENDURL+"/a/dislike",requestOptions)
+    fetch(BACKENDURL+"/playlist/dislike",requestOptions)
     .then((res) => {
       if(res.status == 401){
         localStorage.setItem("token", '');
@@ -110,17 +111,19 @@ export const PublicPlaylist = (props) => {
           localStorage.setItem("user", '');
           window.location.reload();
         }
-        if(result == "alredy"){
+        
+        if(result == "deleted"){
           setErr( <EuiToast
-            title="Alredy Disliked"
-            color="danger"
-            iconType="alert"
+            title="Song deleted"
+            color="success"
+            iconType="check"
             onClick = {() =>setErr(<div></div>)}
-          ></EuiToast>)
-        }
-        else{
+          >
+            <p>Sucess</p>
+          </EuiToast>)
+         }
           loadPlaylist();
-        }
+        
       },
       (error) => {
        PrintError();
@@ -153,7 +156,7 @@ export const PublicPlaylist = (props) => {
         <EuiLink href={item.url} target="_blank">
           {item.artist} {name}
         </EuiLink>
-        <p className={item.dislike > 0?"red":""}>{item.name} ({item.dislike})</p>
+        <p className={item.dislike > 0?"red":""}>{item.name} ({item.dislike}{item.disliker==""?null:": "+item.disliker})</p>
         
       </div>
       ),
