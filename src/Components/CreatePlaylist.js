@@ -473,7 +473,6 @@ let getOnlinePlaylistSongs =  (offset) =>{
   /><EuiSpacer/>
   
    <EuiButton onClick={() =>checkDifference()}  color="primary">Update Songs</EuiButton><EuiSpacer/>
-   <EuiLink href={localStorage.getItem("genPlalist")} target={"_blank"}>{localStorage.getItem("genPlalist")}</EuiLink>
     </div>
   );
 };

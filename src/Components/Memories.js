@@ -1,4 +1,4 @@
-import { EuiComboBox,EuiFieldText,EuiSpacer,EuiButton,EuiToast } from '@elastic/eui';
+import {EuiLoadingChart } from '@elastic/eui';
 import React, { useState, useEffect } from 'react';
 import { BACKENDURL } from '../constants';
 
@@ -7,9 +7,11 @@ export const Memories= (props) => {
 const [items, setItems] = useState([])
 
 const [content, setContent] = useState([])
+const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl"  />);
     
 useEffect(() =>{
     if(props.user){
+        localStorage.setItem("actual_page","memories")
       getImages();
     }
     },[props.user])
@@ -50,9 +52,11 @@ let getImages = () =>{
                     allImages.push(<img className='image' src={result[i].base64Code}/>);
                     }
                     setContent(allImages)
+                    setLoadingAnimation(<div></div>)
                     return
             }
             setContent([<p>no images</p>])
+            setLoadingAnimation(<div></div>)
             return
         }
     )
@@ -61,6 +65,7 @@ let getImages = () =>{
       <div>
           <div className='image-container eui-yScroll play'>
           <h2>{props.playlistname}</h2>
+          {loadinganimation}
             {content}
         </div>
        </div>

@@ -45,19 +45,20 @@ export const PageLay = (props) => {
       switch (localStorage.getItem("actual_page")) {
         case "public":
           setPlaylist();
-          // Anweisungen werden ausgeführt,
-          // falls expression mit value1 übereinstimmt
+          
           break;
         case "bucket":
           setBucket();
-          // Anweisungen werden ausgeführt,
-          // falls expression mit value2 übereinstimmt
+      
           break;
         case "create":
           setNewGroup();
-          // Anweisungen werden ausgeführt,
-          // falls expression mit value2 übereinstimmt
+        
           break;
+          case "memories":
+            setMemories();
+           
+            break;
         default:
          localStorage.setItem("actual_page","bucket")
           break;

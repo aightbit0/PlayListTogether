@@ -10,6 +10,7 @@ import {
   EuiButton,
   EuiTitle,
   EuiText,
+  EuiLink,
 } from '@elastic/eui';
 
 
@@ -63,10 +64,10 @@ export const Login =(props) => {
         <h1>NEWS</h1>
         </EuiTitle>
         <EuiText>
-          Dislike Songs now working !
+          Memories now available !
           <br></br>
-          Performance improvements
         </EuiText>
+        <EuiLink href={"https://sven-latka.we-make-your.software/"} target={"_blank"}>visit my Website !</EuiLink>
         </div>
         
     );
