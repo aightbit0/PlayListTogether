@@ -15,12 +15,15 @@ import { PublicPlaylist } from './PublicPlaylist';
 import { GroupComp } from './GroupComp';
 import { CreatePlaylist } from './CreatePlaylist';
 import { BACKENDURL } from '../constants';
+import { Memories } from './Memories';
 
 export const PageLay = (props) => {
   const [bucketSelected, setBucketSelected] = useState(true);
   const [playListSelected, setPlayListSelected] = useState(false);
   const [groupSelected, setGroupSelected] = useState(false);
   const [createSelected, setCreateSelected] = useState(false);
+  const [memoriesSelected, setMemoriesSelected] = useState(false);
+  
   const [code, setCode] = useState('');
   const [nitems, setNItems] = useState([]);
   const [content, setContent] = useState(<div><Search/>
@@ -81,6 +84,9 @@ export const PageLay = (props) => {
     if(createSelected){
       setContent(<CreatePlaylist user={props.user} acode={code}></CreatePlaylist>)
     }
+    if(memoriesSelected){
+      setContent(<Memories user={props.user} playlistname={localStorage.getItem("playlist")}></Memories>)
+    }
   },[bucketSelected,playListSelected,createSelected,groupSelected]);
 
   let setBucket = () =>{
@@ -88,6 +94,7 @@ export const PageLay = (props) => {
     setPlayListSelected(false)
     setGroupSelected(false)
     setCreateSelected(false)
+    setMemoriesSelected(false)
   }
 
   let setPlaylist = () =>{
@@ -95,6 +102,7 @@ export const PageLay = (props) => {
     setGroupSelected(false)
     setPlayListSelected(true)
     setCreateSelected(false)
+    setMemoriesSelected(false)
   }
 
   let setNewGroup = () =>{
@@ -102,6 +110,7 @@ export const PageLay = (props) => {
     setGroupSelected(true)
     setPlayListSelected(false)
     setCreateSelected(false)
+    setMemoriesSelected(false)
   }
 
   let setCreate = () =>{
@@ -109,6 +118,15 @@ export const PageLay = (props) => {
     setBucketSelected(false)
     setGroupSelected(false)
     setPlayListSelected(false)
+    setMemoriesSelected(false)
+  }
+
+  let setMemories = () =>{
+    setCreateSelected(false)
+    setBucketSelected(false)
+    setGroupSelected(false)
+    setPlayListSelected(false)
+    setMemoriesSelected(true)
   }
 
   let logOut = () =>{
@@ -161,6 +179,7 @@ export const PageLay = (props) => {
          
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
+          { label: 'Memories <3',  onClick: () => setMemories()},
           { label: 'create Playlist', isSelected: groupSelected, onClick: () => {setNewGroup()} },
           { label: 'deploy/edit Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
           //{ label: 'Theme',  onClick: () => props.toggleTheme()},
