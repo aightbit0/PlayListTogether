@@ -1,13 +1,10 @@
-import React, { useState , useEffect} from 'react';
+import React, { useState , useEffect, useRef} from 'react';
 import {
   EuiBasicTable,
   EuiLink,
   EuiImage,
-  EuiButton,
-  EuiSpacer,
   EuiToast,
   EuiLoadingChart,
-  EuiIcon,
 } from '@elastic/eui';
 import { Delete } from './Delete';
 import { Collapse } from './Collaps';
@@ -24,12 +21,18 @@ export const UserTable = (props) => {
   const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl" />)
   const [nav, setNav] = useState(<Collapse rerender = {(name,plid) => rerender(name,plid)}></Collapse>)
   const [actualBucket, setActualBucket] = useState(localStorage.getItem("playlist"))
+  const [fromPosition, setfromPosition] = useState(0)
+  const [bucketLoaded, setBucketLoaded] = useState(false)
+  const listInnerRef = useRef();
+  const INCREASEVALUE = 30;
+  const [actualBucketLength, setActualBucketLength] = useState(0)
+  
 
   useEffect(() =>{
     if(props.user){
       localStorage.setItem("actual_page","bucket")
       if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
-        loadBucket();
+        loadBucket(fromPosition, false);
       }else{
         setLoadingAnimation(<div></div>);
         setErr( <EuiToast
@@ -42,6 +45,19 @@ export const UserTable = (props) => {
     }
   },[props.user])
 
+  let onScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+      if (scrollTop + clientHeight >= scrollHeight -2) {
+          if(bucketLoaded && fromPosition <= actualBucketLength){
+            loadBucket(fromPosition+INCREASEVALUE, false)
+            setfromPosition(fromPosition+INCREASEVALUE)
+            setBucketLoaded(false)
+          }
+      }
+    }
+  }
+
   let rerender = (playlistname,playlistid) =>{
     localStorage.setItem("playlist",playlistname)
     if(playlistid != ""){
@@ -53,7 +69,7 @@ export const UserTable = (props) => {
   
     if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
       setActualBucket(localStorage.getItem("playlist"))
-      loadBucket();
+      loadBucket(fromPosition, true);
     }
   }
 
@@ -73,17 +89,24 @@ export const UserTable = (props) => {
   }
 
   
-  let loadBucket = async () =>{
+  let loadBucket = async (from, reset) =>{
+    if(reset){
+      from = 0;
+    }
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: localStorage.getItem("user"),
-        playlistname: localStorage.getItem("playlist")
+        playlistname: localStorage.getItem("playlist"),
+        from: parseInt(from),
+        to: parseInt(INCREASEVALUE)
        })
   };
-  
+
+    
+  setLoadingAnimation(<EuiLoadingChart size="xl" />)
     fetch(BACKENDURL+"/playlist/getbucket",requestOptions)
     .then((res) => {
       if(res.status == 401){
@@ -102,9 +125,22 @@ export const UserTable = (props) => {
           window.location.reload();
         }else{
           if(result){
-            setItems(result.data);
+
+            if(reset){
+              setfromPosition(0)
+              setItems([]);
+            }
+
+            if(result.data){
+              setItems( items => [...items, ...result.data])
+             
+            }
+ 
             setAmount(parseInt(result.amount));
+            setActualBucketLength(parseInt(result.bucketActualAmount));
             setLoaded(true)
+            setBucketLoaded(true)
+            
           }else{
             setItems([]);
           }
@@ -133,10 +169,10 @@ export const UserTable = (props) => {
 
   useEffect(() =>{
    if(loaded){
-     if(items.length < amount){
+     if(actualBucketLength < amount){
       if(props.newItems.length != 0){
         addSongToBucket(props.newItems)
-        loadBucket();
+        loadBucket(fromPosition, true);
        }
      }else{
        setErr( <EuiToast
@@ -198,7 +234,7 @@ export const UserTable = (props) => {
               <p>Sucess</p>
             </EuiToast>)
             clear();
-            loadBucket();
+            loadBucket(fromPosition, true);
           }
         
           else{
@@ -250,7 +286,7 @@ export const UserTable = (props) => {
           <p>Sucess</p>
         </EuiToast>)
         clear();
-        loadBucket();
+        loadBucket(fromPosition, true);
         return res.json()
       }
     })
@@ -288,10 +324,9 @@ export const UserTable = (props) => {
           <EuiLink href={item.url} target="_blank">
             {item.artist} {name}
           </EuiLink>
+      
           <p className={item.dislike > 0?"red":""}>{item.name} ({item.dislike}{item.disliker==""?null:": "+item.disliker})</p>
         </div>
-       
-        
       ),
     }
   ];
@@ -331,12 +366,12 @@ export const UserTable = (props) => {
         {nav}
       </div>
       
-    <p>{props.user}s Bucket {actualBucket} ({items.length} of {amount}){' '}
+    <p>{props.user}s Bucket {actualBucket} ({actualBucketLength} of {amount}){' '}
   </p><br/>
     {err}
-    {loadinganimation}
     
-    <div className={"eui-yScroll bucket"}>
+    
+    <div className={"eui-yScroll bucket"} onScroll={(e) =>onScroll(e)} ref={listInnerRef}>
     <EuiBasicTable
       items={items}
       rowHeader="firstName"
@@ -344,6 +379,7 @@ export const UserTable = (props) => {
       rowProps={getRowProps}
       cellProps={getCellProps}
     />
+    {loadinganimation}
     </div>
     {modalrender}
     </div>

@@ -89,3 +89,17 @@
   margin-right: auto;
   
 }
+
+.imageShower{
+  position: fixed;
+    z-index: 1;
+    left: 0;
+    background-color: rgba(101, 101, 101, 0.9);;
+    height: 100%;
+    top: 0;
+}
+
+.imagebig{
+  width: 100%;
+  margin-top: 30%;
+}

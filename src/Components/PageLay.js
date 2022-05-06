@@ -180,7 +180,7 @@ export const PageLay = (props) => {
          
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
           { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
-          { label: 'Memories <3',  onClick: () => setMemories()},
+          { label: 'Memories <3', isSelected: memoriesSelected, onClick: () => setMemories()},
           { label: 'create Playlist', isSelected: groupSelected, onClick: () => {setNewGroup()} },
           { label: 'deploy/edit Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
           //{ label: 'Theme',  onClick: () => props.toggleTheme()},

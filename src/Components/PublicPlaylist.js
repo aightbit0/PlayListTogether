@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   EuiBasicTable,
   EuiLink,
@@ -18,11 +18,31 @@ export const PublicPlaylist = (props) => {
   const [err, setErr] = useState(<div></div>);
   const [loadinganimation, setLoadingAnimation] = useState(<EuiLoadingChart size="xl"  />);
 
+  const listInnerRef = useRef();
+  const INCREASEVALUE = 30;
+  const [fromPosition, setfromPosition] = useState(0)
+  const [bucketLoaded, setBucketLoaded] = useState(false)
+  const [actualPlaylistLength, setActualPlaylistLength] = useState(0)
+
+
+  let onScroll = () => {
+    if (listInnerRef.current) {
+      const { scrollTop, scrollHeight, clientHeight } = listInnerRef.current;
+      if (scrollTop + clientHeight >= scrollHeight -2) {
+          if(bucketLoaded && fromPosition <= actualPlaylistLength){
+            loadPlaylist(fromPosition+INCREASEVALUE, false)
+            setfromPosition(fromPosition+INCREASEVALUE)
+            setBucketLoaded(false)
+          }
+      }
+    }
+  }
+
   useEffect(() =>{
     if(props.user){
       localStorage.setItem("actual_page","public")
       if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
-        loadPlaylist();
+        loadPlaylist(fromPosition+INCREASEVALUE, true);
       }else{
         setLoadingAnimation(<div></div>);
         setErr( <EuiToast
@@ -44,15 +64,20 @@ export const PublicPlaylist = (props) => {
     ></EuiToast>)
   }
 
-  let loadPlaylist = async () =>{
-    
+  let loadPlaylist = async (from, reset) =>{
+    if(reset){
+      from = 0;
+    }
+    setLoadingAnimation(<EuiLoadingChart size="xl"  />)
     const requestOptions = {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
       body: JSON.stringify({ 
         token: localStorage.getItem("token"), 
         user: localStorage.getItem("user"),
-        playlistname: localStorage.getItem("playlist")
+        playlistname: localStorage.getItem("playlist"),
+        from: parseInt(from),
+        to: parseInt(INCREASEVALUE)
        })
   };
     fetch(BACKENDURL+"/playlist/getplaylist",requestOptions)
@@ -67,9 +92,30 @@ export const PublicPlaylist = (props) => {
     })
     .then(
       (result) => {
+
+
+        if(result){
+
+          if(reset){
+            setfromPosition(0)
+            setItems([]);
+          }
+
+          if(result.data){
+            setItems( items => [...items, ...result.data])
+           
+          }
+          
+          setActualPlaylistLength(parseInt(result.bucketActualAmount));
+          setBucketLoaded(true)
+        }else{
+          setItems([]);
+        }
+          /*
           if(result){
             setItems(result);
           }
+          */
           setLoadingAnimation(<div></div>)
       },
       (error) => {
@@ -122,7 +168,7 @@ export const PublicPlaylist = (props) => {
             <p>Sucess</p>
           </EuiToast>)
          }
-          loadPlaylist();
+          loadPlaylist(fromPosition+INCREASEVALUE, true);
         
       },
       (error) => {
@@ -193,10 +239,10 @@ export const PublicPlaylist = (props) => {
 
   return (
     <div>
-    <h2>{localStorage.getItem("playlist")} ({items.length})</h2><br/>
+    <h2>{localStorage.getItem("playlist")} ({actualPlaylistLength})</h2><br/>
     {err}
-    {loadinganimation}
-    <div className={"eui-yScroll play"}>
+   
+    <div className={"eui-yScroll play"}onScroll={(e) =>onScroll(e)} ref={listInnerRef}>
     <EuiBasicTable
       items={items}
       rowHeader="firstName"
@@ -204,6 +250,7 @@ export const PublicPlaylist = (props) => {
       rowProps={getRowProps}
       cellProps={getCellProps}
     />
+    {loadinganimation}
     </div>
     {modalrender}  
     </div>

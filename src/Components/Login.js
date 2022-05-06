@@ -41,7 +41,6 @@ export const Login =(props) => {
             <EuiFieldPassword
             fullWidth
             placeholder="Password"
-            //type={dual ? 'dual' : undefined}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             aria-label="Use aria labels when no actual label is in use"
@@ -65,6 +64,8 @@ export const Login =(props) => {
         </EuiTitle>
         <EuiText>
           Memories now available !
+          <br></br>
+         Added Bucket Loading for better Performance
           <br></br>
         </EuiText>
         <EuiLink href={"https://sven-latka.we-make-your.software/"} target={"_blank"}>visit my Website !</EuiLink>
