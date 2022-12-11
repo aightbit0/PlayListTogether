@@ -6,29 +6,6 @@ export const Collapse = (props) => {
   const [playlists, setplaylists] = useState(<div>no Playlists</div>)
   const [createdplaylists, setcreatedplaylists] = useState(<div>no created Playlists</div>)
   const [loadinganimation, setLoadingAnimation] = useState(<div></div>)
-  const [disabled, setDisabled] = useState(false)
-
-  useEffect(() =>{
-    if(localStorage.getItem("performance")){
-      if(localStorage.getItem("performance") =="true"){
-        setDisabled(true)
-      }
-    }
-  },[])
-
-  let setPerformance = (target) =>{
-    if(localStorage.getItem("performance")){
-      if(target === true){
-        localStorage.setItem("performance","true")
-      }else{
-        localStorage.setItem("performance","false")
-      }
-      setDisabled(target)
-    }else{
-      localStorage.setItem("performance","true")
-    }
-  }
-  
 
   let loadPlaylists = () =>{
     setNavIsOpen((isOpen) => !isOpen)
@@ -78,7 +55,7 @@ export const Collapse = (props) => {
   let createPlaylists = (res) =>{
     let allPlaylists = [];
     res.map((i) =>{
-      allPlaylists.push(<div><EuiButton onClick={() => props.rerender(i.playlistname,i.playlisturl)}>
+      allPlaylists.push(<div><EuiButton onClick={() => {localStorage.setItem("actual_page","bucket");props.rerender(i.playlistname,i.playlisturl)}}>
       {i.playlistname}
     </EuiButton><EuiSpacer /></div>)
     })
@@ -99,6 +76,46 @@ export const Collapse = (props) => {
     setcreatedplaylists(allCreatedPlaylists)
   }
 
+  let logOut = () =>{
+    const requestOptions = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer '+localStorage.getItem("token") },
+      body: JSON.stringify({ 
+        token: localStorage.getItem("token"), 
+        user: props.user,
+       })
+  };
+  
+    fetch(BACKENDURL+"/playlist/logout",requestOptions)
+    .then((res) => {
+      if(res.status == 401){
+        localStorage.setItem("token", '');
+        localStorage.setItem("user", '');
+        window.location.reload();
+        return
+      }  
+      return res.json()
+    })
+    .then(
+      (result) => {
+        localStorage.setItem("token",'')
+        localStorage.setItem("user",'')
+        localStorage.setItem("playlist",'')
+        localStorage.setItem("actual_page",'')
+        window.location.reload();
+      },
+      (error) => {
+       console.log("failed")
+       localStorage.setItem("token",'')
+        localStorage.setItem("user",'')
+        localStorage.setItem("playlist",'')
+        localStorage.setItem("actual_page",'')
+        window.location.reload();
+      }
+    )
+   
+  }
+
   return (
       <EuiCollapsibleNav
         isOpen={navIsOpen}
@@ -108,7 +125,7 @@ export const Collapse = (props) => {
         }
         onClose={() => setNavIsOpen(false)}
       >
-        <div style={{ padding: 16 }}>
+        <div className='eui-yScroll' style={{ padding: 16 }}>
           {loadinganimation}
           <EuiTitle>
             <h2>Your Playlists</h2>
@@ -121,12 +138,29 @@ export const Collapse = (props) => {
           </EuiTitle>
           <EuiSpacer />
           {createdplaylists}
+
+          <div>
+          <EuiButton onClick={() => {localStorage.setItem("actual_page","create");props.rerender(localStorage.getItem("playlist"),localStorage.getItem("playlistID"))}}>
+            new Playlist
+          </EuiButton>
+          <EuiSpacer />
         </div>
-        <EuiSwitch
-        label="Performance Mode"
-        checked={disabled}
-        onChange={(e) => setPerformance(e.target.checked)}
-      />
+
+        <div>
+          <EuiButton onClick={() => {localStorage.setItem("actual_page","update");props.rerender(localStorage.getItem("playlist"),localStorage.getItem("playlistID"))}}>
+            Update Playlist
+          </EuiButton>
+          <EuiSpacer />
+        </div>
+        <div>
+          <EuiButton onClick={() =>logOut()}>
+            Logout
+          </EuiButton>
+          <EuiSpacer />
+        </div>
+         
+        </div>
       </EuiCollapsibleNav>
   );
+  // {localStorage.getItem("playlist")!=""?<div><EuiButton color='danger' onClick={() =>logOut()}>Leave Playlist</EuiButton><EuiSpacer /></div>:null}
 };

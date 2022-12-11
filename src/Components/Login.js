@@ -63,10 +63,7 @@ export const Login =(props) => {
         <h1>NEWS</h1>
         </EuiTitle>
         <EuiText>
-          Memories now available !
-          <br></br>
-         Added Bucket Loading for better Performance
-          <br></br>
+         New Design available (beta)
         </EuiText>
         <EuiLink href={"https://sven-latka.we-make-your.software/"} target={"_blank"}>visit my Website !</EuiLink>
         </div>

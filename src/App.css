@@ -1,14 +1,19 @@
-
 .oka{
   max-height: 400px;
 }
 
-.buttonwrapper{
+.buttonwrapper {
   width: 100%;
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
   justify-content: end;
+}
+
+.buttonwrapper > button{
+  position: absolute;
+  top: 15px;
+  right: 10px;
 }
 
 .bucket{

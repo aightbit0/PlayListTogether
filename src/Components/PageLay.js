@@ -11,11 +11,12 @@ import {
   EuiPageContentBody,
 } from '@elastic/eui';
 
-import { PublicPlaylist } from './PublicPlaylist';
+
 import { GroupComp } from './GroupComp';
 import { CreatePlaylist } from './CreatePlaylist';
 import { BACKENDURL } from '../constants';
 import { Memories } from './Memories';
+import { Collapse } from './Collaps';
 
 export const PageLay = (props) => {
   const [bucketSelected, setBucketSelected] = useState(true);
@@ -23,7 +24,7 @@ export const PageLay = (props) => {
   const [groupSelected, setGroupSelected] = useState(false);
   const [createSelected, setCreateSelected] = useState(false);
   const [memoriesSelected, setMemoriesSelected] = useState(false);
-  
+  const [nav, setNav] = useState(<Collapse rerender = {(name,plid) => rerender(name,plid)} ></Collapse>)
   const [code, setCode] = useState('');
   const [nitems, setNItems] = useState([]);
   const [content, setContent] = useState(<div><Search/>
@@ -43,10 +44,6 @@ export const PageLay = (props) => {
     }
     else{
       switch (localStorage.getItem("actual_page")) {
-        case "public":
-          setPlaylist();
-          
-          break;
         case "bucket":
           setBucket();
       
@@ -76,9 +73,7 @@ export const PageLay = (props) => {
       setContent(<div><Search reload={(items) => reloadTable(items)} user={props.user}/>
         <UserTable newItems={nitems} user={props.user}/></div>)
     }
-    if(playListSelected){
-      setContent(<div><PublicPlaylist user={props.user}/></div>)
-    }
+    
     if(groupSelected){
       setContent(<GroupComp></GroupComp>)
     }
@@ -98,13 +93,6 @@ export const PageLay = (props) => {
     setMemoriesSelected(false)
   }
 
-  let setPlaylist = () =>{
-    setBucketSelected(false)
-    setGroupSelected(false)
-    setPlayListSelected(true)
-    setCreateSelected(false)
-    setMemoriesSelected(false)
-  }
 
   let setNewGroup = () =>{
     setBucketSelected(false)
@@ -169,6 +157,45 @@ export const PageLay = (props) => {
     )
    
   }
+
+  let rerender = (playlistname,playlistid) =>{
+    switch (localStorage.getItem("actual_page")) {
+      case "create":
+        setNewGroup()
+        setContent(<GroupComp></GroupComp>)
+        return
+      case "update":
+        setCreate()
+        setContent(<CreatePlaylist user={props.user} acode={code}></CreatePlaylist>)
+        return
+    default:
+     localStorage.setItem("actual_page","bucket")
+      break;
+  }
+    localStorage.setItem("playlist",playlistname)
+    if(playlistid != ""){
+      let zw =playlistid.split("/")
+      localStorage.setItem("playlistID",zw[4])
+    }else{
+      localStorage.setItem("playlistID","")
+    }
+    if(localStorage.getItem("playlist") && localStorage.getItem("playlist") != ''){
+      switch (localStorage.getItem("actual_page")) {
+        case "bucket":
+          setBucket()
+          setContent(<div><Search reload={(items) => reloadTable(items)} user={props.user}/>
+          <UserTable newName={playlistname} newId={playlistid} newItems={nitems} user={props.user}/></div>)
+          //setContent(<UserTable newName={playlistname} newItems={nitems} user={props.user}/>)
+          break;
+          case "memories":
+            setContent(<Memories user={props.user} playlistname={localStorage.getItem("playlist")}></Memories>)
+          break;
+        default:
+         localStorage.setItem("actual_page","bucket")
+          break;
+      }
+    }
+  }
   
   return(
     <EuiPage paddingSize="none">
@@ -179,13 +206,16 @@ export const PageLay = (props) => {
           paddingSize="s"
          
           tabs={[{ label: 'Bucket', isSelected: bucketSelected,  onClick: () => {setBucket()}}, 
-          { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },
+         /* { label: 'public Playlist', isSelected: playListSelected, onClick: () => {setPlaylist()} },*/
           { label: 'Memories <3', isSelected: memoriesSelected, onClick: () => setMemories()},
-          { label: 'create Playlist', isSelected: groupSelected, onClick: () => {setNewGroup()} },
-          { label: 'deploy/edit Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
+          /*{ label: 'create Playlist', isSelected: groupSelected, onClick: () => {setNewGroup()} },*/
+          //{ label: 'deploy/edit Playlist', isSelected: createSelected, onClick: () => {setCreate()} },
           //{ label: 'Theme',  onClick: () => props.toggleTheme()},
-          {label: "Log out",onClick: () => logOut()}]}
+          /*{label: "Log out",onClick: () => logOut()}*/]}
         />
+         <div className='buttonwrapper'>
+        {nav}
+      </div>
         <EuiPageContent borderRadius="none" hasShadow={false} paddingSize="none">
           <EuiPageContentBody restrictWidth paddingSize="l">
            {content}
